@@ -1,0 +1,28 @@
+{
+  "name": "monolith/http",
+  "description": "Monolith: HTTP",
+  "license": "MIT",
+  "keywords": [
+    "monolith",
+    "http"
+  ],
+  "homepage": "https://www.monolith-php.com",
+  "authors": [
+    {
+      "name": "Mitchell van Wijngaarden",
+      "email": "mitchell@kooding.nl"
+    }
+  ],
+  "require": {
+    "php": "^7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Monolith\\HTTP\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev"
+}
