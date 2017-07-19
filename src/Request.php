@@ -66,7 +66,7 @@ class Request {
     }
 
     public function isSecure(): bool {
-        return ! $this->server('HTTPS');
+        return ! empty($this->server('HTTPS'));
     }
 
     public function scheme(): string {
