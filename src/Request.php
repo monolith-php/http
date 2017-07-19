@@ -12,9 +12,9 @@ class Request {
     /** @var Map */
     private $files;
     /** @var Map */
-    private $env;
-    /** @var Map */
     private $cookies;
+    /** @var Map */
+    private $env;
 
     private function __construct() {}
 
@@ -24,8 +24,8 @@ class Request {
         $r->input = new Map($_POST);
         $r->server = new Map($_SERVER);
         $r->files = new Map($_FILES);
-        $r->env = new Map($_ENV);
         $r->cookies = new Map($_COOKIE);
+        $r->env = new Map($_ENV);
         return $r;
     }
 
@@ -45,12 +45,12 @@ class Request {
         return $this->files->get($key);
     }
 
-    public function env(string $key): string {
-        return $this->env->get($key);
-    }
-
     public function cookie(string $key): string {
         return $this->cookies->get($key);
+    }
+
+    public function env(string $key): string {
+        return $this->env->get($key);
     }
 
     public function uri(): string {
@@ -65,7 +65,25 @@ class Request {
         return new IPv4($this->server('REMOTE_ADDR'));
     }
 
-    public function isSecureConnection(): bool {
+    public function isSecure(): bool {
         return ! $this->server('HTTPS');
+    }
+
+    public function scheme(): bool {
+        return $this->isSecureConnection() ? 'https' : 'http';
+    }
+
+    public function __debugInfo(): array {
+        return [
+            'query' => $this->query->toArray(),
+            'input' => $this->input->toArray(),
+            'server' => $this->server->toArray(),
+            'files' => $this->files->toArray(),
+            'cookies' => $this->cookies->toArray(),
+            'env' => $this->env->toArray(),
+            'method' => $this->method(),
+            'scheme' => $this->scheme(),
+            'isSecure' => $this->isSecure()
+        ];
     }
 }
