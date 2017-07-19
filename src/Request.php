@@ -15,8 +15,6 @@ class Request {
     private $env;
     /** @var Map */
     private $cookies;
-    /** @var Map */
-    private $sessions;
 
     private function __construct() {}
 
@@ -28,7 +26,6 @@ class Request {
         $r->files = new Map($_FILES);
         $r->env = new Map($_ENV);
         $r->cookies = new Map($_COOKIE);
-        $r->sessions = new Map($_SESSION);
         return $r;
     }
 
@@ -54,10 +51,6 @@ class Request {
 
     public function cookie(string $key): string {
         return $this->cookies->get($key);
-    }
-
-    public function session(string $key): string {
-        return $this->sessions->get($key);
     }
 
     public function uri(): string {
