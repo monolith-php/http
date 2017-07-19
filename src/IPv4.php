@@ -6,9 +6,9 @@ final class IPv4 implements IPAddress {
 
     public function __construct(?string $ipAddress) {
         if (filter_var($ipAddress, FILTER_VALIDATE_IP, ['flags' => FILTER_FLAG_IPV4])) {
-            $this->ipAddress = $ipAddress;
+            throw IPAddressNonCompliantWithIPVersion::IPv4($ipAddress);
         }
-        throw IPAddressNonCompliantWithIPVersion::IPv4($ipAddress);
+        $this->ipAddress = $ipAddress;
     }
 
     public function equals(IPAddress $that): bool {
