@@ -22,13 +22,13 @@ class Request {
 
     public static function fromGlobals(): Request {
         $r = new static;
-        $r->query = new Map(clone $_GET);
-        $r->input = new Map(clone $_POST);
-        $r->server = new Map(clone $_SERVER);
-        $r->files = new Map(clone $_FILES);
-        $r->env = new Map(clone $_ENV);
-        $r->cookies = new Map(clone $_COOKIE);
-        $r->sessions = new Map(clone $_SESSION);
+        $r->query = new Map($_GET);
+        $r->input = new Map($_POST);
+        $r->server = new Map($_SERVER);
+        $r->files = new Map($_FILES);
+        $r->env = new Map($_ENV);
+        $r->cookies = new Map($_COOKIE);
+        $r->sessions = new Map($_SESSION);
         return $r;
     }
 
