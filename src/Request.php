@@ -1,25 +1,78 @@
 <?php namespace Monolith\HTTP;
 
+use Monolith\Collections\Map;
+
 class Request {
-    /** @var string */
-    private $uri;
-    /** @var string */
-    private $method;
+    /** @var Map */
+    private $query;
+    /** @var Map */
+    private $input;
+    /** @var Map */
+    private $server;
+    /** @var Map */
+    private $files;
+    /** @var Map */
+    private $env;
+    /** @var Map */
+    private $cookies;
+    /** @var Map */
+    private $sessions;
 
     private function __construct() {}
 
     public static function fromGlobals(): Request {
         $r = new static;
-        $r->uri = $_SERVER['REQUEST_URI'];
-        $r->method = strtoupper($_SERVER['REQUEST_METHOD']);
+        $r->query = new Map(clone $_GET);
+        $r->input = new Map(clone $_POST);
+        $r->server = new Map(clone $_SERVER);
+        $r->files = new Map(clone $_FILES);
+        $r->env = new Map(clone $_ENV);
+        $r->cookies = new Map(clone $_COOKIE);
+        $r->sessions = new Map(clone $_SESSION);
         return $r;
     }
 
+    public function query(string $key): string {
+        return $this->query->get($key);
+    }
+
+    public function input(string $key): string {
+        return $this->input->get($key);
+    }
+
+    public function server(string $key): string {
+        return $this->server->get($key);
+    }
+
+    public function file(string $key): string {
+        return $this->files->get($key);
+    }
+
+    public function env(string $key): string {
+        return $this->env->get($key);
+    }
+
+    public function cookie(string $key): string {
+        return $this->cookies->get($key);
+    }
+
+    public function session(string $key): string {
+        return $this->sessions->get($key);
+    }
+
     public function uri(): string {
-        return $this->uri;
+        return $this->server('REQUEST_URI'); // needs to be a class
     }
 
     public function method(): string {
-        return $this->method;
+        return strtoupper($this->server('REQUEST_METHOD'));
+    }
+
+    public function clientIP(): IPAddress {
+        return new IPv4($this->server('REMOTE_ADDR'));
+    }
+
+    public function isSecureConnection(): bool {
+        return ! $this->server('HTTPS');
     }
 }

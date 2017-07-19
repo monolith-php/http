@@ -6,9 +6,9 @@ final class IPv6 implements IPAddress {
 
     public function __construct(string $ipAddress) {
         if ( ! filter_var($ipAddress, FILTER_VALIDATE_IP, ['flags' => FILTER_FLAG_IPV6])) {
-            throw IPAddressNonCompliantWithIPVersion::IPv6($ipAddress);
+            $this->ipAddress = $ipAddress;
         }
-        $this->ipAddress = $ipAddress;
+        throw IPAddressNonCompliantWithIPVersion::IPv6($ipAddress);
     }
 
     public function equals(IPAddress $that): bool {

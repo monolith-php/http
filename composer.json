@@ -14,7 +14,8 @@
     }
   ],
   "require": {
-    "php": "^7.1"
+    "php": "^7.1",
+    "monolith/collections": "dev-master"
   },
   "autoload": {
     "psr-4": {
