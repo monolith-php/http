@@ -81,10 +81,10 @@ class Request {
             'files' => $this->files->toArray(),
             'cookies' => $this->cookies->toArray(),
             'env' => $this->env->toArray(),
-            //            'clientIp' => (string) $this->clientIP(),
-            //            'method' => $this->method(),
-            //            'scheme' => $this->scheme(),
-            //            'isSecure' => $this->isSecure()
+            'clientIP' => (string) $this->clientIP(),
+            'method' => $this->method(),
+            'isSecure' => $this->isSecure(),
+            'scheme' => $this->scheme(),
         ];
     }
 }
