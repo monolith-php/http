@@ -73,7 +73,7 @@ class Request {
         return $this->isSecureConnection() ? 'https' : 'http';
     }
 
-    public function __debugInfo(): array {
+    public function __debugInfo() {
         return [
             'query' => $this->query->toArray(),
             'input' => $this->input->toArray(),
@@ -81,6 +81,7 @@ class Request {
             'files' => $this->files->toArray(),
             'cookies' => $this->cookies->toArray(),
             'env' => $this->env->toArray(),
+            'clientIp' => (string) $this->clientIP(),
             'method' => $this->method(),
             'scheme' => $this->scheme(),
             'isSecure' => $this->isSecure()
