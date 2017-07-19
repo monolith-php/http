@@ -30,27 +30,27 @@ class Request {
     }
 
     public function query(string $key): string {
-        return $this->query->get($key);
+        return $this->query->hasKey($key) ? (string) $this->query->get($key) : null;
     }
 
     public function input(string $key): string {
-        return $this->input->get($key);
+        return $this->input->hasKey($key) ? (string) $this->input->get($key) : null;
     }
 
     public function server(string $key): string {
-        return $this->server->get($key);
+        return $this->server->hasKey($key) ? (string) $this->server->get($key) : null;
     }
 
-    public function file(string $key): string {
-        return $this->files->get($key);
+    public function file(string $key) {
+        return $this->files->hasKey($key) ? $this->files->get($key) : null;
     }
 
-    public function cookie(string $key): string {
-        return $this->cookies->get($key);
+    public function cookie(string $key) {
+        return $this->cookies->hasKey($key) ? $this->cookies->get($key) : null;
     }
 
     public function env(string $key): string {
-        return $this->env->get($key);
+        return $this->env->hasKey($key) ? (string) $this->env->get($key) : null;
     }
 
     public function uri(): string {
@@ -69,8 +69,8 @@ class Request {
         return ! $this->server('HTTPS');
     }
 
-    public function scheme(): bool {
-        return $this->isSecureConnection() ? 'https' : 'http';
+    public function scheme(): string {
+        return $this->isSecure() ? 'https' : 'http';
     }
 
     public function __debugInfo() {
@@ -81,10 +81,10 @@ class Request {
             'files' => $this->files->toArray(),
             'cookies' => $this->cookies->toArray(),
             'env' => $this->env->toArray(),
-            'clientIp' => (string) $this->clientIP(),
-            'method' => $this->method(),
-            'scheme' => $this->scheme(),
-            'isSecure' => $this->isSecure()
+            //            'clientIp' => (string) $this->clientIP(),
+            //            'method' => $this->method(),
+            //            'scheme' => $this->scheme(),
+            //            'isSecure' => $this->isSecure()
         ];
     }
 }
