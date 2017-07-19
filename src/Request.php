@@ -29,28 +29,28 @@ class Request {
         return $r;
     }
 
-    public function query(string $key): string {
-        return $this->query->hasKey($key) ? (string) $this->query->get($key) : null;
+    public function query(string $key): ?string {
+        return $this->query->has($key) ? (string) $this->query->get($key) : null;
     }
 
-    public function input(string $key): string {
-        return $this->input->hasKey($key) ? (string) $this->input->get($key) : null;
+    public function input(string $key): ?string {
+        return $this->input->has($key) ? (string) $this->input->get($key) : null;
     }
 
-    public function server(string $key): string {
-        return $this->server->hasKey($key) ? (string) $this->server->get($key) : null;
+    public function server(string $key): ?string {
+        return $this->server->has($key) ? (string) $this->server->get($key) : null;
     }
 
     public function file(string $key) {
-        return $this->files->hasKey($key) ? $this->files->get($key) : null;
+        return $this->files->has($key) ? $this->files->get($key) : null;
     }
 
     public function cookie(string $key) {
-        return $this->cookies->hasKey($key) ? $this->cookies->get($key) : null;
+        return $this->cookies->has($key) ? $this->cookies->get($key) : null;
     }
 
-    public function env(string $key): string {
-        return $this->env->hasKey($key) ? (string) $this->env->get($key) : null;
+    public function env(string $key): ?string {
+        return $this->env->has($key) ? (string) $this->env->get($key) : null;
     }
 
     public function uri(): string {

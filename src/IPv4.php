@@ -4,7 +4,7 @@ final class IPv4 implements IPAddress {
     /** @var string */
     private $ipAddress;
 
-    public function __construct(string $ipAddress) {
+    public function __construct(?string $ipAddress) {
         if (filter_var($ipAddress, FILTER_VALIDATE_IP, ['flags' => FILTER_FLAG_IPV4])) {
             $this->ipAddress = $ipAddress;
         }

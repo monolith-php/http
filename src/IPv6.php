@@ -4,7 +4,7 @@ final class IPv6 implements IPAddress {
     /** @var string */
     private $ipAddress;
 
-    public function __construct(string $ipAddress) {
+    public function __construct(?string $ipAddress) {
         if ( ! filter_var($ipAddress, FILTER_VALIDATE_IP, ['flags' => FILTER_FLAG_IPV6])) {
             $this->ipAddress = $ipAddress;
         }
