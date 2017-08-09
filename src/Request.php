@@ -1,5 +1,6 @@
 <?php namespace Monolith\HTTP;
 
+use function rawurldecode;
 use Monolith\Collections\Map;
 
 class Request {
@@ -55,6 +56,10 @@ class Request {
 
     public function uri(): string {
         return $this->server('REQUEST_URI'); // needs to be a class
+    }
+
+    public function rawDecodedUri(): string {
+        return rawurldecode($this->uri());
     }
 
     public function method(): string {
