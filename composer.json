@@ -5,7 +5,6 @@
     "monolith",
     "http"
   ],
-  "homepage": "https://www.getmonolith.com",
   "authors": [
     {
       "name": "Shawn McCool",
@@ -18,7 +17,7 @@
   ],
   "require": {
     "php": "^7.1",
-    "monolith/collections": "^1.0"
+    "monolith/collections": "^1"
   },
   "autoload": {
     "psr-4": {
