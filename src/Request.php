@@ -94,7 +94,7 @@ class Request {
 
     public function method() {
 
-        if (strtolower($this->server('REQUEST_METHOD')) == strtolower('HEAD')) {
+        if (strtolower($this->server('REQUEST_METHOD')) == 'head') {
             return 'get';
         }
 
