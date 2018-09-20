@@ -1,4 +1,4 @@
-<?php namespace Monolith\HTTP;
+<?php namespace Monolith\Http;
 
 final class IPv6 implements IPAddress {
     /** @var string */

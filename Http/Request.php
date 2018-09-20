@@ -1,9 +1,10 @@
-<?php namespace Monolith\HTTP;
+<?php namespace Monolith\Http;
 
 use function rawurldecode;
 use Monolith\Collections\Map;
 
 class Request {
+
     /** @var Map */
     private $query;
     /** @var Map */

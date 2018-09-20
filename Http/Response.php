@@ -1,4 +1,4 @@
-<?php namespace Monolith\HTTP;
+<?php namespace Monolith\Http;
 
 class Response {
     private $content;

@@ -1,4 +1,4 @@
-<?php namespace Monolith\HTTP;
+<?php namespace Monolith\Http;
 
 interface IPAddress {
     public function equals(IPAddress $that): bool;
