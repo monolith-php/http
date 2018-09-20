@@ -7,6 +7,7 @@ class Response {
         $this->content = $content;
     }
 
+    // this whole class needs to be reviewed
     public function send() {
         header('HTTP/1.1 200 OK', true, 200);
         echo $this->content;

@@ -1,7 +1,6 @@
 {
   "name": "monolith/http",
-  "description": "Monolith: HTTP",
-  "license": "MIT",
+  "description": "HTTP abstractions for the Monolith framework.",
   "keywords": [
     "monolith",
     "http"
@@ -9,17 +8,17 @@
   "homepage": "https://www.getmonolith.com",
   "authors": [
     {
-      "name": "Mitchell van Wijngaarden",
-      "email": "mitchell@kooding.nl"
-    },
-    {
       "name": "Shawn McCool",
       "email": "shawn@heybigname.com"
+    },
+    {
+      "name": "Mitchell van Wijngaarden",
+      "email": "mitchell@kooding.nl"
     }
   ],
   "require": {
     "php": "^7.1",
-    "monolith/collections": "dev-master"
+    "monolith/collections": "^1.0"
   },
   "autoload": {
     "psr-4": {
