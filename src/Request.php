@@ -94,7 +94,7 @@ class Request {
 
     public function method() {
 
-        return strtoupper($this->server('REQUEST_METHOD'));
+        return strtolower($this->server('REQUEST_METHOD') ? 'HEAD' : 'GET');
     }
 
     public function clientIP(): IpAddress {
