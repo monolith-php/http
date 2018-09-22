@@ -3,7 +3,7 @@
 use Monolith\Collections\Map;
 use function rawurldecode;
 
-class Request {
+final class Request {
 
     /** @var Map */
     private $get;
@@ -113,7 +113,7 @@ class Request {
             return new Ipv6($ipAddress);
         }
 
-        throw new CouldNotParseTheClientsIpAddress($ipAddress);
+        throw new CanNotParseClientIp($ipAddress);
     }
 
     public function rawDecodedUri() {

@@ -1,6 +1,6 @@
 <?php namespace Monolith\Http;
 
-class Response {
+final class Response {
 
     public static function ok($body) {
 

@@ -1,3 +1,3 @@
-# HTTP abstractions
+# HTTP $$VERSION$$
 
 basic info
