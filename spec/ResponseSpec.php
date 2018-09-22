@@ -14,23 +14,19 @@ class ResponseSpec extends ObjectBehavior {
         $this->shouldHaveType(Response::class);
     }
 
-    function it_can_represent_a_200_ok_response() {
-
-        $this->beConstructedThrough('ok', ['body123']);
-        $this->matches($this, '200', '200 OK', 'body123');
-    }
-
-    function it_can_represent_a_201_created_response() {
-
-    }
-
-    /**
-     * @param $response
-     */
-    private function matches($response, $code, $codeString, $body): void {
-
-        $response->code()->shouldBe($code);
-        $response->codeString()->shouldBe($codeString);
-        $response->body()->shouldBe($body);
-    }
+//    function it_can_represent_a_200_ok_response() {
+//
+//        $this->beConstructedThrough('ok', ['body123']);
+//        $this->matches($this, '200', '200 OK', 'body123');
+//    }
+//
+//    /**
+//     * @param $response
+//     */
+//    private function matches($response, $code, $codeString, $body): void {
+//
+//        $response->code()->shouldBe($code);
+//        $response->codeString()->shouldBe($codeString);
+//        $response->body()->shouldBe($body);
+//    }
 }
