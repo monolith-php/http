@@ -6,7 +6,7 @@ use PhpSpec\ObjectBehavior;
 class ResponseSpec extends ObjectBehavior {
 
     function let() {
-        $this->beConstructedThrough('code200', ['body content']);
+        $this->beConstructedThrough('ok', ['body content']);
     }
 
     function it_is_initializable() {
@@ -14,10 +14,23 @@ class ResponseSpec extends ObjectBehavior {
         $this->shouldHaveType(Response::class);
     }
 
-    function it_can_represent_a_200_response() {
-        $response = $this::code200('body123');
-        $response->code()->shouldBe('200');
-        $response->body()->shouldBe('body123');
-        $response->codeString()->shouldBe('200 OK');
+    function it_can_represent_a_200_ok_response() {
+
+        $this->beConstructedThrough('ok', ['body123']);
+        $this->matches($this, '200', '200 OK', 'body123');
+    }
+
+    function it_can_represent_a_201_created_response() {
+
+    }
+
+    /**
+     * @param $response
+     */
+    private function matches($response, $code, $codeString, $body): void {
+
+        $response->code()->shouldBe($code);
+        $response->codeString()->shouldBe($codeString);
+        $response->body()->shouldBe($body);
     }
 }
