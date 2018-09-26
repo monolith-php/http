@@ -82,6 +82,6 @@ final class Response {
 
     public function codeString(): string {
 
-        return $this->codeString();
+        return $this->codeString;
     }
 }
