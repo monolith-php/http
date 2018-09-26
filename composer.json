@@ -17,7 +17,7 @@
   ],
   "require": {
     "php": "^7.1",
-    "monolith/collections": "^1"
+    "monolith/collections": "^2"
   },
   "require-dev": {
     "phpspec/phpspec": "^5.0"
