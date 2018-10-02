@@ -3,8 +3,8 @@
 use Monolith\Collections\Map;
 use function rawurldecode;
 
-final class Request {
-
+final class Request
+{
     /** @var Map */
     private $get;
     /** @var Map */
@@ -20,8 +20,8 @@ final class Request {
     /** @var Map */
     private $parameters;
 
-    public function __construct(Map $get, Map $post, Map $server, Map $files, Map $cookies, Map $env, Map $parameters = null) {
-
+    public function __construct(Map $get, Map $post, Map $server, Map $files, Map $cookies, Map $env, Map $parameters = null)
+    {
         if ($parameters == null) {
             $parameters = new Map;
         }
@@ -35,12 +35,13 @@ final class Request {
         $this->parameters = $parameters;
     }
 
-    public static function fromGlobals(): Request {
-
+    public static function fromGlobals(): Request
+    {
         return new static(new Map($_GET), new Map($_POST), new Map($_SERVER), new Map($_FILES), new Map($_COOKIE), new Map($_ENV), new Map());
     }
 
-    public function addParameters(Map $params) {
+    public function addParameters(Map $params)
+    {
         return new static(
             $this->get,
             $this->post,
@@ -52,48 +53,49 @@ final class Request {
         );
     }
 
-    public function param(string $key) {
+    public function param(string $key)
+    {
         return $this->parameters->get($key);
     }
 
-    public function get(string $key) {
-
+    public function get(string $key)
+    {
         return $this->get->get($key);
     }
 
-    public function post(string $key) {
-
+    public function post(string $key)
+    {
         return $this->post->get($key);
     }
 
-    public function server(string $key) {
-
+    public function server(string $key)
+    {
         return $this->server->get($key);
     }
 
     // i'm aware that many of these are not strings, but we'll hit that hump later
-    public function file(string $key) {
-
+    public function file(string $key)
+    {
         return $this->files->get($key);
     }
 
-    public function cookie(string $key) {
-
+    public function cookie(string $key)
+    {
         return $this->cookies->get($key);
     }
 
-    public function env(string $key) {
-
+    public function env(string $key)
+    {
         return $this->env->get($key);
     }
 
-    public function uri() {
-
+    public function uri()
+    {
         return $this->server('REQUEST_URI');
     }
 
-    public function method() {
-
+    public function method()
+    {
         if (strtolower($this->server('REQUEST_METHOD')) == 'head') {
             return 'get';
         }
@@ -101,8 +103,8 @@ final class Request {
         return strtolower($this->server('REQUEST_METHOD'));
     }
 
-    public function clientIP(): IpAddress {
-
+    public function clientIP(): IpAddress
+    {
         $ipAddress = $this->server('REMOTE_ADDR');
 
         if (Ipv4::isValid($ipAddress)) {
@@ -116,23 +118,23 @@ final class Request {
         throw new CanNotParseClientIp($ipAddress);
     }
 
-    public function rawDecodedUri() {
-
+    public function rawDecodedUri()
+    {
         return rawurldecode($this->uri());
     }
 
-    public function isSecure(): bool {
-
+    public function isSecure(): bool
+    {
         return ! empty($this->server('HTTPS'));
     }
 
-    public function scheme() {
-
+    public function scheme()
+    {
         return $this->isSecure() ? 'https' : 'http';
     }
 
-    public function serialize() {
-
+    public function serialize()
+    {
         return [
             'get'      => $this->get->toArray(),
             'post'     => $this->post->toArray(),

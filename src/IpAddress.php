@@ -1,6 +1,7 @@
 <?php namespace Monolith\Http;
 
-interface IpAddress {
+interface IpAddress
+{
     public function equals(IpAddress $that): bool;
     public function toString(): string;
 }

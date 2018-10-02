@@ -3,10 +3,10 @@
 use Monolith\Collections\Map;
 use PhpSpec\ObjectBehavior;
 
-class RequestSpec extends ObjectBehavior {
-
-    function let() {
-
+class RequestSpec extends ObjectBehavior
+{
+    function let()
+    {
         $get = new Map();
         $input = new Map();
         $server = new Map();
@@ -17,8 +17,8 @@ class RequestSpec extends ObjectBehavior {
         $this->beConstructedWith($get, $input, $server, $files, $cookies, $env);
     }
 
-    function it_can_be_constructed_from_globals() {
-
+    function it_can_be_constructed_from_globals()
+    {
         $_GET['a0'] = 'b0';
         $_POST['a1'] = 'b1';
         $_SERVER['a2'] = 'b2';
@@ -36,8 +36,8 @@ class RequestSpec extends ObjectBehavior {
         $request->env('a5')->shouldBe('b5');
     }
 
-    public function it_can_be_enriched_with_parameters() {
-
+    public function it_can_be_enriched_with_parameters()
+    {
         $newRequest = $this->addParameters(new Map(['a' => 1, 'b' => 2]));
         $newRequest->param('a')->shouldBe(1);
         $newRequest->param('b')->shouldBe(2);
