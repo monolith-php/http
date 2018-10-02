@@ -2,6 +2,9 @@
 
 final class Response
 {
+    /** @var array */
+    private $cookies;
+
     public static function ok($body)
     {
         return new static('200', 'OK', $body);
@@ -51,17 +54,18 @@ final class Response
     private $codeString;
     private $body;
 
-    protected function __construct($code, $codeString, $body = '')
+    protected function __construct($code, $codeString, $body = '', $cookies = [])
     {
         $this->body = $body;
         $this->code = $code;
         $this->codeString = $codeString;
+        $this->cookies = $cookies;
     }
 
     // this whole class needs to be reviewed
     public function send()
     {
-        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, 200);
+        $this->sendHeaders();
 
         echo $this->body;
 
@@ -83,5 +87,28 @@ final class Response
     public function codeString(): string
     {
         return $this->codeString;
+    }
+
+    public function cookies(): array
+    {
+        return $this->cookies;
+    }
+
+    public function addCookie(Cookie $cookie): Response
+    {
+        $newCookies = $this->cookies;
+        $newCookies[] = $cookie;
+
+        return new Response($this->code, $this->codeString, $this->body, $newCookies);
+    }
+
+    public function sendHeaders(): void
+    {
+        /** @var Cookie $cookie */
+        foreach ($this->cookies as $cookie) {
+            setcookie($cookie->name(), $cookie->value(), $cookie->expiresUnixTimestamp(), $cookie->path(), $cookie->domain(), $cookie->secure(), $cookie->httpOnly());
+        }
+
+        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, $this->code());
     }
 }
