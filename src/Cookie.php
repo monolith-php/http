@@ -52,7 +52,7 @@ final class Cookie
         return $this->httpOnly;
     }
 
-    public function __construct(string $name, string $value, int $expiresUnixTimestamp = 0, $path = '/', $domain = '', $secure = true, $httpOnly = true)
+    public function __construct(string $name, string $value, int $expiresUnixTimestamp = 0, $path = '/', $domain = '', $secure = false, $httpOnly = false)
     {
         $this->name = $name;
         $this->value = $value;
