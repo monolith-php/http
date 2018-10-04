@@ -40,7 +40,7 @@ final class Request
         return new static(new Map($_GET), new Map($_POST), new Map($_SERVER), new Map($_FILES), new Map($_COOKIE), new Map($_ENV), new Map());
     }
 
-    public function addParameters(Map $params)
+    public function addParameters(Map $params): Request
     {
         return new static(
             $this->get,
@@ -53,40 +53,39 @@ final class Request
         );
     }
 
-    public function param(string $key)
+    public function parameters(): Map
     {
-        return $this->parameters->get($key);
+        return $this->parameters;
     }
 
-    public function get(string $key)
+    public function get(): Map
     {
-        return $this->get->get($key);
+        return $this->get;
     }
 
-    public function post(string $key)
+    public function post(): Map
     {
-        return $this->post->get($key);
+        return $this->post;
     }
 
-    public function server(string $key)
+    public function server(): Map
     {
-        return $this->server->get($key);
+        return $this->server;
     }
 
-    // i'm aware that many of these are not strings, but we'll hit that hump later
-    public function file(string $key)
+    public function files(): Map
     {
-        return $this->files->get($key);
+        return $this->files;
     }
 
-    public function cookie(string $key)
+    public function cookies(): Map
     {
-        return $this->cookies->get($key);
+        return $this->cookies;
     }
 
-    public function env(string $key)
+    public function env(): Map
     {
-        return $this->env->get($key);
+        return $this->env;
     }
 
     public function uri()

@@ -28,18 +28,18 @@ class RequestSpec extends ObjectBehavior
 
         $request = $this::fromGlobals();
 
-        $request->get('a0')->shouldBe('b0');
-        $request->post('a1')->shouldBe('b1');
-        $request->server('a2')->shouldBe('b2');
-        $request->file('a3')->shouldBe('b3');
-        $request->cookie('a4')->shouldBe('b4');
-        $request->env('a5')->shouldBe('b5');
+        $request->get()->get('a0')->shouldBe('b0');
+        $request->post()->get('a1')->shouldBe('b1');
+        $request->server()->get('a2')->shouldBe('b2');
+        $request->files()->get('a3')->shouldBe('b3');
+        $request->cookies()->get('a4')->shouldBe('b4');
+        $request->env()->get('a5')->shouldBe('b5');
     }
 
     public function it_can_be_enriched_with_parameters()
     {
         $newRequest = $this->addParameters(new Map(['a' => 1, 'b' => 2]));
-        $newRequest->param('a')->shouldBe(1);
-        $newRequest->param('b')->shouldBe(2);
+        $newRequest->parameters()->get('a')->shouldBe(1);
+        $newRequest->parameters()->get('b')->shouldBe(2);
     }
 }
