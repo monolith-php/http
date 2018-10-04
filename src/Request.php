@@ -90,21 +90,21 @@ final class Request
 
     public function uri()
     {
-        return $this->server('REQUEST_URI');
+        return $this->server->get('REQUEST_URI');
     }
 
     public function method()
     {
-        if (strtolower($this->server('REQUEST_METHOD')) == 'head') {
+        if (strtolower($this->server->get('REQUEST_METHOD')) == 'head') {
             return 'get';
         }
 
-        return strtolower($this->server('REQUEST_METHOD'));
+        return strtolower($this->server->get('REQUEST_METHOD'));
     }
 
     public function clientIP(): IpAddress
     {
-        $ipAddress = $this->server('REMOTE_ADDR');
+        $ipAddress = $this->server->get('REMOTE_ADDR');
 
         if (Ipv4::isValid($ipAddress)) {
             return new Ipv4($ipAddress);
@@ -124,7 +124,7 @@ final class Request
 
     public function isSecure(): bool
     {
-        return ! empty($this->server('HTTPS'));
+        return ! empty($this->server->get('HTTPS'));
     }
 
     public function scheme()

@@ -1,6 +1,7 @@
 <?php namespace spec\Monolith\Http;
 
 use Monolith\Collections\Map;
+use Monolith\Http\Ipv4;
 use PhpSpec\ObjectBehavior;
 
 class RequestSpec extends ObjectBehavior
@@ -22,6 +23,9 @@ class RequestSpec extends ObjectBehavior
         $_GET['a0'] = 'b0';
         $_POST['a1'] = 'b1';
         $_SERVER['a2'] = 'b2';
+        $_SERVER['REQUEST_URI'] = 'my uri';
+        $_SERVER['REQUEST_METHOD'] = 'my method';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_FILES['a3'] = 'b3';
         $_COOKIE['a4'] = 'b4';
         $_ENV['a5'] = 'b5';
@@ -34,6 +38,11 @@ class RequestSpec extends ObjectBehavior
         $request->files()->get('a3')->shouldBe('b3');
         $request->cookies()->get('a4')->shouldBe('b4');
         $request->env()->get('a5')->shouldBe('b5');
+        $request->uri()->shouldBe('my uri');
+        $request->method()->shouldBe('my method');
+
+        $request->clientIP()->shouldHaveType(Ipv4::class);
+        $request->clientIp()->toString()->shouldBe('127.0.0.1');
     }
 
     public function it_can_be_enriched_with_parameters()
