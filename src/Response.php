@@ -30,9 +30,9 @@ final class Response
         return new static('307', 'See Other', $url);
     }
 
-    public static function badRequest()
+    public static function badRequest($body)
     {
-        return new static('400', 'Bad Request');
+        return new static('400', 'Bad Request', $body);
     }
 
     public static function unauthorized()
