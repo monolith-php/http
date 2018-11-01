@@ -118,8 +118,8 @@ final class Response
 
         header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, $this->code());
 
-        foreach ($this->additionalHeaders as $name => $value) {
-            header("{name}: {$value}");
+        foreach ($this->additionalHeaders->toArray() as $name => $value) {
+            header("{$name}: {$value}");
         }
     }
 }
