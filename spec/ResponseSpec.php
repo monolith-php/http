@@ -27,4 +27,10 @@ class ResponseSpec extends ObjectBehavior
         $cookie->name()->shouldBe('session_id');
         $cookie->value()->shouldBe('12');
     }
+
+    function it_can_redirect()
+    {
+        $this->beConstructedThrough('redirect', ['/login']);
+        $this->additionalHeaders()->get('Location')->shouldBe('/login');
+    }
 }

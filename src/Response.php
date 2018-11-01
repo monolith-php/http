@@ -1,10 +1,9 @@
 <?php namespace Monolith\Http;
 
+use Monolith\Collections\MutableMap;
+
 final class Response
 {
-    /** @var array */
-    private $cookies;
-
     public static function ok($body)
     {
         return new static('200', 'OK', $body);
@@ -20,14 +19,12 @@ final class Response
         return new static('204', 'No Content');
     }
 
-    public static function movedPermanently($url)
-    {
-        return new static('301', 'Moved Permanently', $url);
-    }
-
     public static function redirect($url)
     {
-        return new static('307', 'See Other', $url);
+        $headers = new MutableMap([
+            'Location' => $url
+        ]);
+        return new static('301', 'Moved Permanently', '', [], $headers);
     }
 
     public static function badRequest($body)
@@ -53,13 +50,18 @@ final class Response
     private $code;
     private $codeString;
     private $body;
+    /** @var array */
+    private $cookies;
+    /** @var MutableMap  */
+    private $additionalHeaders;
 
-    protected function __construct($code, $codeString, $body = '', $cookies = [])
+    protected function __construct($code, $codeString, $body = '', $cookies = [], MutableMap $additionalHeaders = null)
     {
         $this->body = $body;
         $this->code = $code;
         $this->codeString = $codeString;
         $this->cookies = $cookies;
+        $this->additionalHeaders = $additionalHeaders ?? new MutableMap;;
     }
 
     // this whole class needs to be reviewed
@@ -94,6 +96,11 @@ final class Response
         return $this->cookies;
     }
 
+    public function additionalHeaders(): MutableMap
+    {
+        return $this->additionalHeaders;
+    }
+
     public function addCookie(Cookie $cookie): Response
     {
         $newCookies = $this->cookies;
@@ -110,5 +117,9 @@ final class Response
         }
 
         header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, $this->code());
+
+        foreach ($this->additionalHeaders as $name => $value) {
+            header("{name}: {$value}");
+        }
     }
 }
