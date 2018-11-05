@@ -22,11 +22,9 @@ final class Response
     public static function redirect($url)
     {
         $headers = new MutableMap([
-            'Location' => $url,
-            'Cache-Control' => 'no-cache',
-            'Pragma' => 'no-cache'
+            'Location' => $url
         ]);
-        return new static('302', 'Found', '', [], $headers);
+        return new static('307', 'See Other', '', [], $headers);
     }
 
     public static function badRequest($body)
