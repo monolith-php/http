@@ -9,18 +9,15 @@
     {
       "name": "Shawn McCool",
       "email": "shawn@heybigname.com"
-    },
-    {
-      "name": "Mitchell van Wijngaarden",
-      "email": "mitchell@kooding.nl"
     }
   ],
   "require": {
     "php": "^7.1",
-    "monolith/collections": "^3"
+    "monolith/collections": "^3",
+    "monolith/component-bootstrapping": "^4"
   },
   "require-dev": {
-    "phpspec/phpspec": "^5.0"
+    "phpspec/phpspec": "^4.0"
   },
   "autoload": {
     "psr-4": {
