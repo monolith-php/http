@@ -141,7 +141,7 @@ final class Request
             'files'    => $this->files->toArray(),
             'cookies'  => $this->cookies->toArray(),
             'env'      => $this->env->toArray(),
-            'clientIP' => (string) $this->clientIP(),
+            'clientIP' => $this->clientIP()->toString(),
             'method'   => $this->method(),
             'isSecure' => $this->isSecure(),
             'scheme'   => $this->scheme(),
