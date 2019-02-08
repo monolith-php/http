@@ -5,6 +5,8 @@ use function rawurldecode;
 
 final class Request
 {
+    /** @var string */
+    private $body;
     /** @var Map */
     private $get;
     /** @var Map */
@@ -23,6 +25,7 @@ final class Request
     private $parameters;
 
     public function __construct(
+        string $body,
         Map $get,
         Map $post,
         Map $server,
@@ -35,7 +38,7 @@ final class Request
         if ($parameters == null) {
             $parameters = new Map;
         }
-
+        $this->body = $body;
         $this->get = $get;
         $this->post = $post;
         $this->server = $server;
@@ -49,6 +52,7 @@ final class Request
     public static function fromGlobals(): Request
     {
         return new static(
+            file_get_contents('php://input'),
             new Map($_GET),
             new Map($_POST),
             new Map($_SERVER),
@@ -78,6 +82,7 @@ final class Request
     public function addParameters(Map $params): Request
     {
         return new static(
+            $this->body,
             $this->get,
             $this->post,
             $this->server,
@@ -92,6 +97,11 @@ final class Request
     public function parameters(): Map
     {
         return $this->parameters;
+    }
+
+    public function body(): string
+    {
+        $this->body;
     }
 
     public function get(): Map
@@ -176,6 +186,7 @@ final class Request
     public function serialize()
     {
         return [
+            'body'     => $this->body,
             'get'      => $this->get->toArray(),
             'post'     => $this->post->toArray(),
             'server'   => $this->server->toArray(),

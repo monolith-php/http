@@ -8,6 +8,7 @@ class RequestSpec extends ObjectBehavior
 {
     function let()
     {
+        $body = 'raw body';
         $get = new Map();
         $input = new Map();
         $server = new Map();
@@ -16,7 +17,7 @@ class RequestSpec extends ObjectBehavior
         $env = new Map();
         $headers = new Map();
 
-        $this->beConstructedWith($get, $input, $server, $files, $cookies, $env, $headers );
+        $this->beConstructedWith($body, $get, $input, $server, $files, $cookies, $env, $headers );
     }
 
     function it_can_be_constructed_from_globals()
