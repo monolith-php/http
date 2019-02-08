@@ -18,9 +18,11 @@ final class Request
     /** @var Map */
     private $env;
     /** @var Map */
+    private $headers;
+    /** @var Map */
     private $parameters;
 
-    public function __construct(Map $get, Map $post, Map $server, Map $files, Map $cookies, Map $env, Map $parameters = null)
+    public function __construct(Map $get, Map $post, Map $server, Map $files, Map $cookies, Map $env, Map $headers, Map $parameters = null)
     {
         if ($parameters == null) {
             $parameters = new Map;
@@ -32,12 +34,22 @@ final class Request
         $this->files = $files;
         $this->cookies = $cookies;
         $this->env = $env;
+        $this->headers = $headers;
         $this->parameters = $parameters;
     }
 
     public static function fromGlobals(): Request
     {
-        return new static(new Map($_GET), new Map($_POST), new Map($_SERVER), new Map($_FILES), new Map($_COOKIE), new Map($_ENV), new Map());
+        return new static(
+            new Map($_GET),
+            new Map($_POST),
+            new Map($_SERVER),
+            new Map($_FILES),
+            new Map($_COOKIE),
+            new Map($_ENV),
+            new Map(getallheaders()),
+            new Map()
+        );
     }
 
     public function addParameters(Map $params): Request
@@ -49,6 +61,7 @@ final class Request
             $this->files,
             $this->cookies,
             $this->env,
+            $this->headers,
             $this->parameters->merge($params)
         );
     }
@@ -86,6 +99,11 @@ final class Request
     public function env(): Map
     {
         return $this->env;
+    }
+
+    public function headers(): Map
+    {
+        return $this->headers;
     }
 
     public function uri()
@@ -138,6 +156,7 @@ final class Request
             'get'      => $this->get->toArray(),
             'post'     => $this->post->toArray(),
             'server'   => $this->server->toArray(),
+            'headers'  => $this->headers->toArray(),
             'files'    => $this->files->toArray(),
             'cookies'  => $this->cookies->toArray(),
             'env'      => $this->env->toArray(),
