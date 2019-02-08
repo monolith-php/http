@@ -101,7 +101,7 @@ final class Request
 
     public function body(): string
     {
-        $this->body;
+        return $this->body;
     }
 
     public function get(): Map
