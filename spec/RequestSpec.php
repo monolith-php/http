@@ -14,8 +14,9 @@ class RequestSpec extends ObjectBehavior
         $files = new Map();
         $cookies = new Map();
         $env = new Map();
+        $headers = new Map();
 
-        $this->beConstructedWith($get, $input, $server, $files, $cookies, $env);
+        $this->beConstructedWith($get, $input, $server, $files, $cookies, $env, $headers );
     }
 
     function it_can_be_constructed_from_globals()
@@ -30,6 +31,12 @@ class RequestSpec extends ObjectBehavior
         $_COOKIE['a4'] = 'b4';
         $_ENV['a5'] = 'b5';
 
+        if ( ! function_exists('getallheaders')) {
+            $_SERVER['HTTP_test'] = 'cat';
+        } else {
+            header('test: cat');
+        }
+
         $request = $this::fromGlobals();
 
         $request->get()->get('a0')->shouldBe('b0');
@@ -38,6 +45,7 @@ class RequestSpec extends ObjectBehavior
         $request->files()->get('a3')->shouldBe('b3');
         $request->cookies()->get('a4')->shouldBe('b4');
         $request->env()->get('a5')->shouldBe('b5');
+        $request->headers()->get('Test')->shouldBe('cat');
         $request->uri()->shouldBe('my uri');
         $request->method()->shouldBe('my method');
 

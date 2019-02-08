@@ -22,8 +22,16 @@ final class Request
     /** @var Map */
     private $parameters;
 
-    public function __construct(Map $get, Map $post, Map $server, Map $files, Map $cookies, Map $env, Map $headers, Map $parameters = null)
-    {
+    public function __construct(
+        Map $get,
+        Map $post,
+        Map $server,
+        Map $files,
+        Map $cookies,
+        Map $env,
+        Map $headers,
+        Map $parameters = null
+    ) {
         if ($parameters == null) {
             $parameters = new Map;
         }
@@ -47,9 +55,24 @@ final class Request
             new Map($_FILES),
             new Map($_COOKIE),
             new Map($_ENV),
-            new Map(getallheaders()),
+            new Map(self::getHeaders()),
             new Map()
         );
+    }
+
+    private static function getHeaders()
+    {
+        if ( ! function_exists('getallheaders')) {
+            $headers = [];
+            foreach ($_SERVER as $name => $value) {
+                if (substr($name, 0, 5) == 'HTTP_') {
+                    $headers[str_replace(' ', '-',
+                        ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                }
+            }
+            return $headers;
+        }
+        return getallheaders();
     }
 
     public function addParameters(Map $params): Request
