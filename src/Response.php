@@ -24,7 +24,7 @@ final class Response
         $headers = new MutableMap([
             'Location' => $url
         ]);
-        return new static('302', 'Found', '', [], $headers);
+        return new static('302', '', '', [], $headers);
     }
 
     public static function badRequest($body)
