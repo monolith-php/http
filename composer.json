@@ -13,8 +13,8 @@
   ],
   "require": {
     "php": "^7.2",
-    "monolith/collections": "^4",
-    "monolith/component-bootstrapping": "^4"
+    "monolith/collections": "^5",
+    "monolith/component-bootstrapping": "^5"
   },
   "require-dev": {
     "phpspec/phpspec": "^4.0"
