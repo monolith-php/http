@@ -186,18 +186,19 @@ final class Request
     public function serialize()
     {
         return [
-            'body'     => $this->body,
-            'get'      => $this->get->toArray(),
-            'post'     => $this->post->toArray(),
-            'server'   => $this->server->toArray(),
-            'headers'  => $this->headers->toArray(),
-            'files'    => $this->files->toArray(),
-            'cookies'  => $this->cookies->toArray(),
-            'env'      => $this->env->toArray(),
-            'clientIP' => $this->clientIP()->toString(),
-            'method'   => $this->method(),
-            'isSecure' => $this->isSecure(),
-            'scheme'   => $this->scheme(),
+            'body'       => $this->body,
+            'get'        => $this->get->toArray(),
+            'post'       => $this->post->toArray(),
+            'server'     => $this->server->toArray(),
+            'parameters' => $this->parameters->toArray(),
+            'headers'    => $this->headers->toArray(),
+            'files'      => $this->files->toArray(),
+            'cookies'    => $this->cookies->toArray(),
+            'env'        => $this->env->toArray(),
+            'clientIP'   => $this->clientIP()->toString(),
+            'method'     => $this->method(),
+            'isSecure'   => $this->isSecure(),
+            'scheme'     => $this->scheme(),
         ];
     }
 }

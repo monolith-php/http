@@ -56,8 +56,16 @@ class RequestSpec extends ObjectBehavior
 
     public function it_can_be_enriched_with_parameters()
     {
-        $newRequest = $this->addParameters(new Map(['a' => 1, 'b' => 2]));
-        $newRequest->parameters()->get('a')->shouldBe(1);
-        $newRequest->parameters()->get('b')->shouldBe(2);
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        $request = $this::fromGlobals();
+
+        $request = $request->addParameters(new Map(['a' => 1, 'b' => 2]));
+        $request->parameters()->get('a')->shouldBe(1);
+        $request->parameters()->get('b')->shouldBe(2);
+
+        $serialized = $request->serialize();
+
+        $serialized['parameters']->shouldHaveCount(2);
     }
 }
