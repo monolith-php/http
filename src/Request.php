@@ -51,9 +51,11 @@ final class Request
 
     public static function fromGlobals(): Request
     {
+        $queryStringFields = self::parseQueryString();
+
         return new static(
             file_get_contents('php://input'),
-            new Map($_GET),
+            (new Map($_GET))->merge($queryStringFields),
             new Map($_POST),
             new Map($_SERVER),
             new Map($_FILES),
@@ -77,6 +79,19 @@ final class Request
             return $headers;
         }
         return getallheaders();
+    }
+
+    /**
+     * @return array
+     */
+    private static function parseQueryString(): Map
+    {
+        $queryStringFields = [];
+
+        if (isset($_SERVER['QUERY_STRING'])) {
+            parse_str($_SERVER['QUERY_STRING'], $queryStringFields);
+        }
+        return new Map($queryStringFields);
     }
 
     public function addParameters(Map $params): Request
@@ -171,6 +186,14 @@ final class Request
     public function rawDecodedUri()
     {
         return rawurldecode($this->uri());
+    }
+
+    public function rawDecodedUriWithoutQueryString()
+    {
+        return
+            stristr($this->rawDecodedUri(), '?')
+                ? strstr($this->rawDecodedUri(), '?', true)
+                : $this->rawDecodedUri();
     }
 
     public function isSecure(): bool

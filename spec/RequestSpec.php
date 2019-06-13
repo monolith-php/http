@@ -17,7 +17,7 @@ class RequestSpec extends ObjectBehavior
         $env = new Map();
         $headers = new Map();
 
-        $this->beConstructedWith($body, $get, $input, $server, $files, $cookies, $env, $headers );
+        $this->beConstructedWith($body, $get, $input, $server, $files, $cookies, $env, $headers);
     }
 
     function it_can_be_constructed_from_globals()
@@ -67,5 +67,31 @@ class RequestSpec extends ObjectBehavior
         $serialized = $request->serialize();
 
         $serialized['parameters']->shouldHaveCount(2);
+    }
+
+    public function it_can_provided_decoded_urls_without_query_strings()
+    {
+        $_SERVER['REQUEST_URI'] = 'my-uri';
+        $request = $this::fromGlobals();
+        $request->rawDecodedUriWithoutQueryString()->shouldBe('my-uri');
+
+        $_SERVER['REQUEST_URI'] = 'again?dogs=cats';
+        $request = $this::fromGlobals();
+        $request->rawDecodedUriWithoutQueryString()->shouldBe('again');
+
+        $_SERVER['REQUEST_URI'] = 'hats%20again?dogs=cats';
+        $request = $this::fromGlobals();
+        $request->rawDecodedUriWithoutQueryString()->shouldBe('hats again');
+    }
+
+    public function it_interprets_query_strings_as_get_arguments()
+    {
+        $_SERVER['REQUEST_URI'] = 'my-uri';
+        $_SERVER['QUERY_STRING'] = 'cats=dogs&hats=clogs';
+
+        $request = $this::fromGlobals();
+
+        $request->get()->get('cats')->shouldBe('dogs');
+        $request->get()->get('hats')->shouldBe('clogs');
     }
 }
