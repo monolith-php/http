@@ -83,15 +83,4 @@ class RequestSpec extends ObjectBehavior
         $request = $this::fromGlobals();
         $request->rawDecodedUriWithoutQueryString()->shouldBe('hats again');
     }
-
-    public function it_interprets_query_strings_as_get_arguments()
-    {
-        $_SERVER['REQUEST_URI'] = 'my-uri';
-        $_SERVER['QUERY_STRING'] = 'cats=dogs&hats=clogs';
-
-        $request = $this::fromGlobals();
-
-        $request->get()->get('cats')->shouldBe('dogs');
-        $request->get()->get('hats')->shouldBe('clogs');
-    }
 }
