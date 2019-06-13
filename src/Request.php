@@ -1,7 +1,6 @@
 <?php namespace Monolith\Http;
 
 use Monolith\Collections\Map;
-use function rawurldecode;
 
 final class Request
 {
@@ -141,6 +140,18 @@ final class Request
 
     public function uri()
     {
+        $uri = $this->server->get('REQUEST_URI');
+
+        $uriWithoutQueryString =
+            stristr($uri, '?') ? strstr($uri, '?', true) : $uri;
+
+        return urldecode(
+            $uriWithoutQueryString
+        );
+    }
+
+    public function rawUri()
+    {
         return $this->server->get('REQUEST_URI');
     }
 
@@ -166,19 +177,6 @@ final class Request
         }
 
         throw new CanNotParseClientIp($ipAddress);
-    }
-
-    public function rawDecodedUri()
-    {
-        return rawurldecode($this->uri());
-    }
-
-    public function rawDecodedUriWithoutQueryString()
-    {
-        return
-            stristr($this->rawDecodedUri(), '?')
-                ? strstr($this->rawDecodedUri(), '?', true)
-                : $this->rawDecodedUri();
     }
 
     public function isSecure(): bool

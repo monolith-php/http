@@ -73,14 +73,14 @@ class RequestSpec extends ObjectBehavior
     {
         $_SERVER['REQUEST_URI'] = 'my-uri';
         $request = $this::fromGlobals();
-        $request->rawDecodedUriWithoutQueryString()->shouldBe('my-uri');
+        $request->uri()->shouldBe('my-uri');
 
         $_SERVER['REQUEST_URI'] = 'again?dogs=cats';
         $request = $this::fromGlobals();
-        $request->rawDecodedUriWithoutQueryString()->shouldBe('again');
+        $request->uri()->shouldBe('again');
 
         $_SERVER['REQUEST_URI'] = 'hats%20again?dogs=cats';
         $request = $this::fromGlobals();
-        $request->rawDecodedUriWithoutQueryString()->shouldBe('hats again');
+        $request->uri()->shouldBe('hats again');
     }
 }
