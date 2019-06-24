@@ -1,41 +1,41 @@
 <?php namespace Monolith\Http;
 
-use Monolith\Collections\Map;
+use Monolith\Collections\Dict;
 
 final class Request
 {
     /** @var string */
     private $body;
-    /** @var Map */
+    /** @var Dict */
     private $get;
-    /** @var Map */
+    /** @var Dict */
     private $post;
-    /** @var Map */
+    /** @var Dict */
     private $server;
-    /** @var Map */
+    /** @var Dict */
     private $files;
-    /** @var Map */
+    /** @var Dict */
     private $cookies;
-    /** @var Map */
+    /** @var Dict */
     private $env;
-    /** @var Map */
+    /** @var Dict */
     private $headers;
-    /** @var Map */
+    /** @var Dict */
     private $parameters;
 
     public function __construct(
         string $body,
-        Map $get,
-        Map $post,
-        Map $server,
-        Map $files,
-        Map $cookies,
-        Map $env,
-        Map $headers,
-        Map $parameters = null
+        Dict $get,
+        Dict $post,
+        Dict $server,
+        Dict $files,
+        Dict $cookies,
+        Dict $env,
+        Dict $headers,
+        Dict $parameters = null
     ) {
         if ($parameters == null) {
-            $parameters = new Map;
+            $parameters = new Dict;
         }
         $this->body = $body;
         $this->get = $get;
@@ -52,14 +52,14 @@ final class Request
     {
         return new static(
             file_get_contents('php://input'),
-            new Map($_GET),
-            new Map($_POST),
-            new Map($_SERVER),
-            new Map($_FILES),
-            new Map($_COOKIE),
-            new Map($_ENV),
-            new Map(self::getHeaders()),
-            new Map()
+            new Dict($_GET),
+            new Dict($_POST),
+            new Dict($_SERVER),
+            new Dict($_FILES),
+            new Dict($_COOKIE),
+            new Dict($_ENV),
+            new Dict(self::getHeaders()),
+            new Dict()
         );
     }
 
@@ -78,7 +78,7 @@ final class Request
         return getallheaders();
     }
 
-    public function addParameters(Map $params): Request
+    public function addParameters(Dict $params): Request
     {
         return new static(
             $this->body,
@@ -93,7 +93,7 @@ final class Request
         );
     }
 
-    public function parameters(): Map
+    public function parameters(): Dict
     {
         return $this->parameters;
     }
@@ -103,37 +103,37 @@ final class Request
         return $this->body;
     }
 
-    public function get(): Map
+    public function get(): Dict
     {
         return $this->get;
     }
 
-    public function post(): Map
+    public function post(): Dict
     {
         return $this->post;
     }
 
-    public function server(): Map
+    public function server(): Dict
     {
         return $this->server;
     }
 
-    public function files(): Map
+    public function files(): Dict
     {
         return $this->files;
     }
 
-    public function cookies(): Map
+    public function cookies(): Dict
     {
         return $this->cookies;
     }
 
-    public function env(): Map
+    public function env(): Dict
     {
         return $this->env;
     }
 
-    public function headers(): Map
+    public function headers(): Dict
     {
         return $this->headers;
     }

@@ -1,6 +1,6 @@
 <?php namespace spec\Monolith\Http;
 
-use Monolith\Collections\Map;
+use Monolith\Collections\Dict;
 use Monolith\Http\Ipv4;
 use PhpSpec\ObjectBehavior;
 
@@ -9,13 +9,13 @@ class RequestSpec extends ObjectBehavior
     function let()
     {
         $body = 'raw body';
-        $get = new Map();
-        $input = new Map();
-        $server = new Map();
-        $files = new Map();
-        $cookies = new Map();
-        $env = new Map();
-        $headers = new Map();
+        $get = new Dict();
+        $input = new Dict();
+        $server = new Dict();
+        $files = new Dict();
+        $cookies = new Dict();
+        $env = new Dict();
+        $headers = new Dict();
 
         $this->beConstructedWith($body, $get, $input, $server, $files, $cookies, $env, $headers);
     }
@@ -60,7 +60,7 @@ class RequestSpec extends ObjectBehavior
 
         $request = $this::fromGlobals();
 
-        $request = $request->addParameters(new Map(['a' => 1, 'b' => 2]));
+        $request = $request->addParameters(new Dict(['a' => 1, 'b' => 2]));
         $request->parameters()->get('a')->shouldBe(1);
         $request->parameters()->get('b')->shouldBe(2);
 
