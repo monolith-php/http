@@ -4,19 +4,19 @@ use Monolith\Collections\MutableDict;
 
 final class Response
 {
-    public static function ok($body)
+    public static function ok(string $body = '')
     {
         return new static('200', 'OK', $body);
     }
 
-    public static function created()
+    public static function created(string $body = '')
     {
-        return new static('201', 'Created');
+        return new static('201', 'Created', $body);
     }
 
-    public static function noContent()
+    public static function noContent(string $body = '')
     {
-        return new static('204', 'No Content');
+        return new static('204', 'No Content', $body);
     }
 
     public static function redirect($url)
@@ -27,29 +27,29 @@ final class Response
         return new static('302', 'Found', '', [], $headers);
     }
 
-    public static function badRequest($body)
+    public static function badRequest(string $body = '')
     {
         return new static('400', 'Bad Request', $body);
     }
 
-    public static function unauthorized()
+    public static function unauthorized(string $body = '')
     {
-        return new static('401', 'Unauthorized');
+        return new static('401', 'Unauthorized', $body);
     }
 
-    public static function notFound()
+    public static function notFound(string $body = '')
     {
-        return new static('404', 'Not Found');
+        return new static('404', 'Not Found', $body);
     }
 
-    public static function unprocessable()
+    public static function unprocessable(string $body = '')
     {
-        return new static('422', 'Unprocessable Entity');
+        return new static('422', 'Unprocessable Entity', $body);
     }
 
-    public static function tooManyRequests()
+    public static function tooManyRequests(string $body = '')
     {
-        return new static('429', 'Too Many Requests');
+        return new static('429', 'Too Many Requests', $body);
     }
 
     private $code;
