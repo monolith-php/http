@@ -22,9 +22,9 @@ final class Response
     public static function redirect($url)
     {
         $headers = new MutableDict([
-            'Location' => $url
+            'Location' => $url,
         ]);
-        return new static('302', '', '', [], $headers);
+        return new static('302', 'Found', '', [], $headers);
     }
 
     public static function badRequest($body)
@@ -42,6 +42,11 @@ final class Response
         return new static('404', 'Not Found');
     }
 
+    public static function unprocessable()
+    {
+        return new static('422', 'Unprocessable Entity');
+    }
+
     public static function tooManyRequests()
     {
         return new static('429', 'Too Many Requests');
@@ -52,7 +57,7 @@ final class Response
     private $body;
     /** @var array */
     private $cookies;
-    /** @var MutableDict  */
+    /** @var MutableDict */
     private $additionalHeaders;
 
     protected function __construct($code, $codeString, $body = '', $cookies = [], MutableDict $additionalHeaders = null)
