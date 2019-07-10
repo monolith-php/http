@@ -51,7 +51,7 @@ final class Request
     public static function fromGlobals(): Request
     {
         return new static(
-            file_get_contents('php://input'),
+            file_get_contents('php://input') ?? '',
             new Dict($_GET),
             new Dict($_POST),
             new Dict($_SERVER),
