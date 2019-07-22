@@ -1,6 +1,6 @@
 <?php namespace Monolith\Http;
 
-use Monolith\Collections\MutableDict;
+use Monolith\Collections\MutableDictionary;
 
 final class Response
 {
@@ -21,7 +21,7 @@ final class Response
 
     public static function redirect($url)
     {
-        $headers = new MutableDict([
+        $headers = new MutableDictionary([
             'Location' => $url,
         ]);
         return new static('302', 'Found', '', [], $headers);
@@ -57,16 +57,16 @@ final class Response
     private $body;
     /** @var array */
     private $cookies;
-    /** @var MutableDict */
+    /** @var MutableDictionary */
     private $additionalHeaders;
 
-    protected function __construct($code, $codeString, $body = '', $cookies = [], MutableDict $additionalHeaders = null)
+    protected function __construct($code, $codeString, $body = '', $cookies = [], MutableDictionary $additionalHeaders = null)
     {
         $this->body = $body;
         $this->code = $code;
         $this->codeString = $codeString;
         $this->cookies = $cookies;
-        $this->additionalHeaders = $additionalHeaders ?? new MutableDict;;
+        $this->additionalHeaders = $additionalHeaders ?? MutableDictionary::empty();
     }
 
     // this whole class needs to be reviewed
@@ -101,7 +101,7 @@ final class Response
         return $this->cookies;
     }
 
-    public function additionalHeaders(): MutableDict
+    public function additionalHeaders(): MutableDictionary
     {
         return $this->additionalHeaders;
     }

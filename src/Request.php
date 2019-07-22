@@ -1,41 +1,41 @@
 <?php namespace Monolith\Http;
 
-use Monolith\Collections\Dict;
+use Monolith\Collections\Dictionary;
 
 final class Request
 {
     /** @var string */
     private $body;
-    /** @var Dict */
+    /** @var Dictionary */
     private $get;
-    /** @var Dict */
+    /** @var Dictionary */
     private $post;
-    /** @var Dict */
+    /** @var Dictionary */
     private $server;
-    /** @var Dict */
+    /** @var Dictionary */
     private $files;
-    /** @var Dict */
+    /** @var Dictionary */
     private $cookies;
-    /** @var Dict */
+    /** @var Dictionary */
     private $env;
-    /** @var Dict */
+    /** @var Dictionary */
     private $headers;
-    /** @var Dict */
+    /** @var Dictionary */
     private $parameters;
 
     public function __construct(
         string $body,
-        Dict $get,
-        Dict $post,
-        Dict $server,
-        Dict $files,
-        Dict $cookies,
-        Dict $env,
-        Dict $headers,
-        Dict $parameters = null
+        Dictionary $get,
+        Dictionary $post,
+        Dictionary $server,
+        Dictionary $files,
+        Dictionary $cookies,
+        Dictionary $env,
+        Dictionary $headers,
+        Dictionary $parameters = null
     ) {
         if ($parameters == null) {
-            $parameters = new Dict;
+            $parameters = new Dictionary;
         }
         $this->body = $body;
         $this->get = $get;
@@ -51,15 +51,15 @@ final class Request
     public static function fromGlobals(): Request
     {
         return new static(
-            file_get_contents('php://input') ?? '',
-            new Dict($_GET),
-            new Dict($_POST),
-            new Dict($_SERVER),
-            new Dict($_FILES),
-            new Dict($_COOKIE),
-            new Dict($_ENV),
-            new Dict(self::getHeaders()),
-            new Dict()
+            file_get_contents('php://input'),
+            new Dictionary($_GET),
+            new Dictionary($_POST),
+            new Dictionary($_SERVER),
+            new Dictionary($_FILES),
+            new Dictionary($_COOKIE),
+            new Dictionary($_ENV),
+            new Dictionary(self::getHeaders()),
+            new Dictionary()
         );
     }
 
@@ -78,7 +78,7 @@ final class Request
         return getallheaders();
     }
 
-    public function addParameters(Dict $params): Request
+    public function addParameters(Dictionary $params): Request
     {
         return new static(
             $this->body,
@@ -93,7 +93,7 @@ final class Request
         );
     }
 
-    public function parameters(): Dict
+    public function parameters(): Dictionary
     {
         return $this->parameters;
     }
@@ -103,37 +103,37 @@ final class Request
         return $this->body;
     }
 
-    public function get(): Dict
+    public function get(): Dictionary
     {
         return $this->get;
     }
 
-    public function post(): Dict
+    public function post(): Dictionary
     {
         return $this->post;
     }
 
-    public function server(): Dict
+    public function server(): Dictionary
     {
         return $this->server;
     }
 
-    public function files(): Dict
+    public function files(): Dictionary
     {
         return $this->files;
     }
 
-    public function cookies(): Dict
+    public function cookies(): Dictionary
     {
         return $this->cookies;
     }
 
-    public function env(): Dict
+    public function env(): Dictionary
     {
         return $this->env;
     }
 
-    public function headers(): Dict
+    public function headers(): Dictionary
     {
         return $this->headers;
     }
