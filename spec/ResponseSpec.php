@@ -3,6 +3,7 @@
 use Monolith\Http\Cookie;
 use Monolith\Http\Response;
 use PhpSpec\ObjectBehavior;
+use Monolith\Collections\Dictionary;
 
 class ResponseSpec extends ObjectBehavior
 {
@@ -16,21 +17,40 @@ class ResponseSpec extends ObjectBehavior
         $this->shouldHaveType(Response::class);
     }
 
-    function it_can_set_cookies()
+    function it_can_add_cookies()
     {
         $this->beConstructedThrough('ok', ['']);
 
-        $newResponse = $this->addCookie(new Cookie('session_id', '12', strtotime('now + 10 minutes'), '/', '', false, false));
+        $newResponse = $this
+            ->withCookie(new Cookie('session_id', '12', strtotime('now + 10 minutes'), '/', '', false, false))
+            ->withCookie(new Cookie('user_id', '33', strtotime('now + 10 minutes'), '/', '', false, false));
 
         $cookie = $newResponse->cookies()[0];
         $cookie->shouldHaveType(Cookie::class);
         $cookie->name()->shouldBe('session_id');
         $cookie->value()->shouldBe('12');
+
+        $cookie = $newResponse->cookies()[1];
+        $cookie->shouldHaveType(Cookie::class);
+        $cookie->name()->shouldBe('user_id');
+        $cookie->value()->shouldBe('33');
     }
 
     function it_can_redirect()
     {
         $this->beConstructedThrough('redirect', ['/login']);
-        $this->additionalHeaders()->get('Location')->shouldBe('/login');
+        $this->headers()->get('Location')->shouldBe('/login');
+    }
+
+    function it_can_add_headers()
+    {
+        $this->beConstructedThrough('ok', ['']);
+
+        $newResponse = $this->withHeader('hats', 'tractor')
+                            ->withHeader('cats', 'chica');
+
+        /** @var Dictionary $header */
+        $newResponse->headers()->get('hats')->shouldBe('tractor');
+        $newResponse->headers()->get('cats')->shouldBe('chica');
     }
 }

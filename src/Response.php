@@ -1,9 +1,35 @@
 <?php namespace Monolith\Http;
 
-use Monolith\Collections\MutableDictionary;
+use Monolith\Collections\Dictionary;
+use Monolith\Collections\Collection;
 
 final class Response
 {
+    /** @var string */
+    private $code;
+    /** @var string */
+    private $codeString;
+    /** @var string */
+    private $body;
+    /** @var Collection */
+    private $cookies;
+    /** @var Dictionary */
+    private $headers;
+
+    protected function __construct(
+        string $code,
+        $codeString,
+        $body = '',
+        Collection $cookies = null,
+        Dictionary $headers = null
+    ) {
+        $this->body = $body;
+        $this->code = $code;
+        $this->codeString = $codeString;
+        $this->cookies = $cookies ?? Collection::empty();
+        $this->headers = $headers ?? Dictionary::empty();
+    }
+
     public static function ok(string $body = '')
     {
         return new static('200', 'OK', $body);
@@ -21,10 +47,12 @@ final class Response
 
     public static function redirect($url)
     {
-        $headers = new MutableDictionary([
-            'Location' => $url,
-        ]);
-        return new static('302', 'Found', '', [], $headers);
+        return new static(
+            '302', 'Found', '', Collection::empty(), Dictionary::of(
+            [
+                'Location' => $url,
+            ])
+        );
     }
 
     public static function badRequest(string $body = '')
@@ -52,23 +80,6 @@ final class Response
         return new static('429', 'Too Many Requests', $body);
     }
 
-    private $code;
-    private $codeString;
-    private $body;
-    /** @var array */
-    private $cookies;
-    /** @var MutableDictionary */
-    private $additionalHeaders;
-
-    protected function __construct($code, $codeString, $body = '', $cookies = [], MutableDictionary $additionalHeaders = null)
-    {
-        $this->body = $body;
-        $this->code = $code;
-        $this->codeString = $codeString;
-        $this->cookies = $cookies;
-        $this->additionalHeaders = $additionalHeaders ?? MutableDictionary::empty();
-    }
-
     // this whole class needs to be reviewed
     public function send()
     {
@@ -81,14 +92,31 @@ final class Response
         }
     }
 
-    public function code()
+    public function sendHeaders(): void
     {
-        return $this->code;
+        $this->cookies->each(function($cookie) {
+            /** @var Cookie $cookie */
+            setcookie(
+                $cookie->name(),
+                $cookie->value(),
+                $cookie->expiresUnixTimestamp(),
+                $cookie->path(),
+                $cookie->domain(),
+                $cookie->secure(),
+                $cookie->httpOnly()
+            );
+        });
+
+        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, (int)$this->code());
+
+        foreach ($this->headers->toArray() as $name => $value) {
+            header(trim($name) . ': ' . trim($value));
+        }
     }
 
-    public function body()
+    public function code(): string
     {
-        return $this->body;
+        return $this->code;
     }
 
     public function codeString(): string
@@ -96,35 +124,39 @@ final class Response
         return $this->codeString;
     }
 
-    public function cookies(): array
+    public function body(): string
+    {
+        return $this->body;
+    }
+
+    public function cookies(): Collection
     {
         return $this->cookies;
     }
 
-    public function additionalHeaders(): MutableDictionary
+    public function headers(): Dictionary
     {
-        return $this->additionalHeaders;
+        return $this->headers;
     }
 
-    public function addCookie(Cookie $cookie): Response
+    public function withHeader($name, $value): Response
     {
-        $newCookies = $this->cookies;
-        $newCookies[] = $cookie;
-
-        return new Response($this->code, $this->codeString, $this->body, $newCookies);
+        return new Response(
+            $this->code,
+            $this->codeString,
+            $this->body,
+            $this->cookies,
+            $this->headers->add($name, $value)
+        );
     }
 
-    public function sendHeaders(): void
+    public function withCookie(Cookie $cookie): Response
     {
-        /** @var Cookie $cookie */
-        foreach ($this->cookies as $cookie) {
-            setcookie($cookie->name(), $cookie->value(), $cookie->expiresUnixTimestamp(), $cookie->path(), $cookie->domain(), $cookie->secure(), $cookie->httpOnly());
-        }
-
-        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, $this->code());
-
-        foreach ($this->additionalHeaders->toArray() as $name => $value) {
-            header("{$name}: {$value}");
-        }
+        return new Response(
+            $this->code,
+            $this->codeString,
+            $this->body,
+            $this->cookies->add($cookie)
+        );
     }
 }
