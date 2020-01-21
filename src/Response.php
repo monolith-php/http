@@ -80,14 +80,35 @@ final class Response
     public function send(): void
     {
         if (is_callable($this->streamFunction)) {
-            ($this->streamFunction)();
+            $this->streamResponse($this->streamFunction);
             return;
         }
 
         $this->sendResponse();
     }
 
-    private function sendResponse(): void
+    private function streamResponse(): void
+    {
+        $this->sendCookies();
+
+        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, (int)$this->code());
+
+        $this->headers = $this->headers
+            ->add('Cache-Control', 'no-cache')
+            ->add('Content-Type', 'text/event-stream')
+            ->add('Transfer-Encoding', 'chunked');
+
+        $this->sendHeaders();
+
+        ($this->streamFunction)(
+            function (string $chunk) {
+                $length = strlen($chunk);
+                echo "{$length}\r\n{$chunk}\r\n";
+            }
+        );
+    }
+
+    private function sendCookies(): void
     {
         $this->cookies->each(
             function ($cookie) {
@@ -101,19 +122,8 @@ final class Response
                     $cookie->secure(),
                     $cookie->httpOnly()
                 );
-            });
-
-        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, (int)$this->code());
-
-        foreach ($this->headers->toArray() as $name => $value) {
-            header(trim($name) . ': ' . trim($value));
-        }
-
-        echo $this->body;
-
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
+            }
+        );
     }
 
     public function code(): string
@@ -126,6 +136,51 @@ final class Response
         return $this->codeString;
     }
 
+    private function sendHeaders(): void
+    {
+        if ( ! $this->headers->has('Content-Length')) {
+            $this->headers = $this->headers->add('Content-Length', strlen($this->body));
+        }
+
+        if ( ! $this->headers->has('Content-Type')) {
+            $this->headers = $this->headers->add('Content-Type', 'text/html');
+        }
+
+        foreach ($this->headers->toArray() as $name => $value) {
+            header(trim($name) . ': ' . trim($value));
+        }
+    }
+
+    private function sendResponse(): void
+    {
+        $this->sendCookies();
+
+        header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, (int)$this->code());
+
+        $this->sendHeaders();
+
+        echo $this->body;
+
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+    }
+
+    /**
+     * The callable is a closure that has a single argument that is a
+     * send function.
+     *
+     * function($send) {
+     *     while(true) {
+     *         $string = makeData();
+     *         $send($string)
+     *         sleep(1);
+     *     }
+     * }
+     *
+     * @param callable $streamFunction
+     * @return static
+     */
     public static function stream(callable $streamFunction)
     {
         return new static('', '', '', null, null, $streamFunction);
