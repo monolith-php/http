@@ -98,7 +98,7 @@ final class Response
             ->add('Content-Type', 'text/event-stream')
             # these last two are for punching through nginx's attempts
             # to use gzip or output buffering
-            ->add('Content-Encoding', 'none')
+            ->add('Content-Encoding', 'identity')
             ->add('X-Accel-Buffering', 'no');
 
         $this->sendHeaders();
