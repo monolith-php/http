@@ -104,6 +104,8 @@ final class Response
             function (string $chunk) {
                 $length = strlen($chunk);
                 echo "{$length}\r\n{$chunk}\r\n";
+                if (ob_get_contents()) ob_end_clean();
+                flush();
             }
         );
     }
