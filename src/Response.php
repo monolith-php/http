@@ -87,11 +87,6 @@ final class Response
         $this->sendResponse();
     }
 
-    /**
-     * For stream response to work with nginx you must modify
-     * the site's config. In the location directive for php files
-     * make sure that "fastcgi_keep_conn on;" is configured.
-     */
     private function streamResponse(): void
     {
         $this->sendCookies();
@@ -100,7 +95,11 @@ final class Response
 
         $this->headers = $this->headers
             ->add('Cache-Control', 'no-cache')
-            ->add('Content-Type', 'text/event-stream');
+            ->add('Content-Type', 'text/event-stream')
+            # these last two are for punching through nginx's attempts
+            # to use gzip or output buffering
+            ->add('Content-Encoding', 'none')
+            ->add('X-Accel-Buffering', 'no');
 
         $this->sendHeaders();
 
