@@ -93,6 +93,14 @@ final class Response
 
         header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, (int)$this->code());
 
+        # configure php for streaming
+        ini_set('zlib.output_compression', 0);
+        ini_set('output_buffering', 'Off');
+        ini_set('output_handler', '');
+        ini_set('implicit_flush', 1);
+        ob_implicit_flush(1);
+        ob_end_clean();
+
         $this->headers = $this->headers
             ->add('Cache-Control', 'no-cache')
             ->add('Content-Type', 'text/event-stream')
