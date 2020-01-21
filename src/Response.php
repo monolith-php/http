@@ -140,10 +140,6 @@ final class Response
 
     private function sendHeaders(): void
     {
-        if ( ! $this->headers->has('Content-Length')) {
-            $this->headers = $this->headers->add('Content-Length', strlen($this->body));
-        }
-
         if ( ! $this->headers->has('Content-Type')) {
             $this->headers = $this->headers->add('Content-Type', 'text/html');
         }
@@ -158,6 +154,10 @@ final class Response
         $this->sendCookies();
 
         header("HTTP/1.1 {$this->code()} {$this->codeString()}", true, (int)$this->code());
+
+        if ( ! $this->headers->has('Content-Length')) {
+            $this->headers = $this->headers->add('Content-Length', strlen($this->body));
+        }
 
         $this->sendHeaders();
 
