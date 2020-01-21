@@ -87,6 +87,11 @@ final class Response
         $this->sendResponse();
     }
 
+    /**
+     * For stream response to work with nginx you must modify
+     * the site's config. In the location directive for php files
+     * make sure that "fastcgi_keep_conn on;" is configured.
+     */
     private function streamResponse(): void
     {
         $this->sendCookies();
@@ -95,17 +100,18 @@ final class Response
 
         $this->headers = $this->headers
             ->add('Cache-Control', 'no-cache')
-            ->add('Content-Type', 'text/event-stream')
-            ->add('Transfer-Encoding', 'chunked');
+            ->add('Content-Type', 'text/event-stream');
 
         $this->sendHeaders();
 
+        ob_implicit_flush(true);
+
         ($this->streamFunction)(
             function (string $chunk) {
-                $length = strlen($chunk);
-                echo "{$length}\r\n{$chunk}\r\n";
-                if (ob_get_contents()) ob_end_clean();
-                flush();
+//                for chunked output
+//                $length = strlen($chunk);
+//                {$length}\r\n
+                echo "{$chunk}\r\n";
             }
         );
     }
