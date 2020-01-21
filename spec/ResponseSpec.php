@@ -53,4 +53,18 @@ class ResponseSpec extends ObjectBehavior
         $newResponse->headers()->get('hats')->shouldBe('tractor');
         $newResponse->headers()->get('cats')->shouldBe('chica');
     }
+
+    function it_can_generate_a_stream_response()
+    {
+        $count = new CountStub(0);
+        $streamFunction = function () use ($count) {
+            $count->increment();
+        };
+
+        $this->beConstructedThrough('stream', [$streamFunction]);
+
+        $this->send();
+
+        expect($count->number())->shouldBe(1);
+    }
 }
