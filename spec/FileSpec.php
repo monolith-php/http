@@ -19,13 +19,21 @@ class FileSpec extends ObjectBehavior
         'error' => 2,
         'size' => 52,
     ];
-    
+
     private $saveFileArray = [
         'name' => 'original-file-name.txt',
         'type' => 'text/plain',
         'tmp_name' => 'tmp/source.txt',
         'error' => 0,
         'size' => 52,
+    ];
+
+    private $emptyFileArray = [
+        'name' => '',
+        'type' => '',
+        'tmp_name' => '',
+        'error' => 0,
+        'size' => 0,
     ];
 
     function it_parses_requests()
@@ -50,5 +58,17 @@ class FileSpec extends ObjectBehavior
         $this->serverTempName()->shouldBe('/tmp/phpXstHsn');
         $this->error()->code()->shouldBe(2);
         $this->size()->bytes()->shouldBe(52);
+    }
+    
+    function it_knows_if_the_upload_has_failed()
+    {
+        $this->beConstructedThrough('fromRequest', [$this->emptyFileArray]);
+        $this->wasUploaded()->shouldBe(false);
+    }
+    
+    function it_knows_if_the_upload_has_succeeded()
+    {
+        $this->beConstructedThrough('fromRequest', [$this->fileArray]);
+        $this->wasUploaded()->shouldBe(true);
     }
 }

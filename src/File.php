@@ -50,6 +50,11 @@ final class File
         return $this->size;
     }
 
+    public function wasUploaded(): bool
+    {
+        return $this->size->bytes() > 0 && ! empty($this->serverTempName);
+    }
+
     /**
      * Leave the filename null to use the original file name
      */
@@ -67,13 +72,13 @@ final class File
             : $directory . "/{$this->name}";
 
         $couldBeMoved = move_uploaded_file($this->serverTempName, $destination);
-        
+
         if (false === $couldBeMoved) {
             throw new CanNotMoveUploadedFile("{$this->serverTempName} must have been a valid uploaded file.");
         }
     }
 
-    public static function fromRequest(array $request)
+    public static function fromRequest(array $request): self
     {
         return new static($request);
     }
