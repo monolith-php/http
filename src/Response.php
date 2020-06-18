@@ -98,8 +98,8 @@ final class Response
         ini_set('output_buffering', 'Off');
         ini_set('output_handler', '');
         ini_set('implicit_flush', 1);
-        ob_implicit_flush(1);
-        ob_end_clean();
+        ob_implicit_flush(true);
+        if (ob_get_contents()) ob_end_clean();
 
         $this->headers = $this->headers
             ->add('Cache-Control', 'no-cache')
@@ -115,9 +115,6 @@ final class Response
 
         ($this->streamFunction)(
             function (string $chunk) {
-//                for chunked output
-//                $length = strlen($chunk);
-//                {$length}\r\n
                 echo "{$chunk}\r\n";
             }
         );

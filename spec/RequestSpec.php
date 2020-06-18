@@ -1,8 +1,9 @@
 <?php namespace spec\Monolith\Http;
 
-use Monolith\Collections\Dictionary;
 use Monolith\Http\Ipv4;
+use Monolith\Http\File;
 use PhpSpec\ObjectBehavior;
+use Monolith\Collections\Dictionary;
 
 class RequestSpec extends ObjectBehavior
 {
@@ -28,7 +29,22 @@ class RequestSpec extends ObjectBehavior
         $_SERVER['REQUEST_URI'] = 'my uri';
         $_SERVER['REQUEST_METHOD'] = 'my method';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $_FILES['a3'] = 'b3';
+        $_FILES = [
+            'f1' => [
+                'name' => 'original-file-name.txt',
+                'type' => 'text/plain',
+                'tmp_name' => '/tmp/phpXstHsn',
+                'error' => 0,
+                'size' => 52,
+            ],
+            'f2' => [
+                'name' => 'second-original-file-name.txt',
+                'type' => 'text/plain',
+                'tmp_name' => '/tmp/second-phpXstHsn',
+                'error' => 0,
+                'size' => 53,
+            ],
+        ];
         $_COOKIE['a4'] = 'b4';
         $_ENV['a5'] = 'b5';
 
@@ -43,7 +59,25 @@ class RequestSpec extends ObjectBehavior
         $request->get()->get('a0')->shouldBe('b0');
         $request->post()->get('a1')->shouldBe('b1');
         $request->server()->get('a2')->shouldBe('b2');
-        $request->files()->get('a3')->shouldBe('b3');
+
+        /** @var File $file */
+        $file = $request->files()->get('f1');
+        $file->phpFileArray()->shouldBe($_FILES['f1']);
+        $file->name()->shouldBe('original-file-name.txt');
+        $file->mimeType()->shouldBe('text/plain');
+        $file->serverTempName()->shouldBe('/tmp/phpXstHsn');
+        $file->error()->shouldBe(null);
+        $file->size()->bytes()->shouldBe(52);
+        
+        /** @var File $file */
+        $file = $request->files()->get('f2');
+        $file->phpFileArray()->shouldBe($_FILES['f2']);
+        $file->name()->shouldBe('second-original-file-name.txt');
+        $file->mimeType()->shouldBe('text/plain');
+        $file->serverTempName()->shouldBe('/tmp/second-phpXstHsn');
+        $file->error()->shouldBe(null);
+        $file->size()->bytes()->shouldBe(53);
+
         $request->cookies()->get('a4')->shouldBe('b4');
         $request->env()->get('a5')->shouldBe('b5');
         $request->headers()->get('Test')->shouldBe('cat');

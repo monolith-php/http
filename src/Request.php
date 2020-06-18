@@ -48,36 +48,6 @@ final class Request
         $this->parameters = $parameters;
     }
 
-    public static function fromGlobals(): Request
-    {
-        return new static(
-            file_get_contents('php://input'),
-            new Dictionary($_GET),
-            new Dictionary($_POST),
-            new Dictionary($_SERVER),
-            new Dictionary($_FILES),
-            new Dictionary($_COOKIE),
-            new Dictionary($_ENV),
-            new Dictionary(self::getHeaders()),
-            new Dictionary()
-        );
-    }
-
-    private static function getHeaders()
-    {
-        if ( ! function_exists('getallheaders')) {
-            $headers = [];
-            foreach ($_SERVER as $name => $value) {
-                if (substr($name, 0, 5) == 'HTTP_') {
-                    $headers[str_replace(' ', '-',
-                        ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-                }
-            }
-            return $headers;
-        }
-        return getallheaders();
-    }
-
     public function addParameters(Dictionary $params): Request
     {
         return new static(
@@ -192,19 +162,53 @@ final class Request
     public function serialize()
     {
         return [
-            'body'       => $this->body,
-            'get'        => $this->get->toArray(),
-            'post'       => $this->post->toArray(),
-            'server'     => $this->server->toArray(),
+            'body' => $this->body,
+            'get' => $this->get->toArray(),
+            'post' => $this->post->toArray(),
+            'server' => $this->server->toArray(),
             'parameters' => $this->parameters->toArray(),
-            'headers'    => $this->headers->toArray(),
-            'files'      => $this->files->toArray(),
-            'cookies'    => $this->cookies->toArray(),
-            'env'        => $this->env->toArray(),
-            'clientIP'   => $this->clientIP()->toString(),
-            'method'     => $this->method(),
-            'isSecure'   => $this->isSecure(),
-            'scheme'     => $this->scheme(),
+            'headers' => $this->headers->toArray(),
+            'files' => $this->files->toArray(),
+            'cookies' => $this->cookies->toArray(),
+            'env' => $this->env->toArray(),
+            'clientIP' => $this->clientIP()->toString(),
+            'method' => $this->method(),
+            'isSecure' => $this->isSecure(),
+            'scheme' => $this->scheme(),
         ];
+    }
+
+    public static function fromGlobals(): Request
+    {
+        return new static(
+            file_get_contents('php://input'),
+            Dictionary::of($_GET),
+            Dictionary::of($_POST),
+            Dictionary::of($_SERVER),
+            Dictionary::of($_FILES)->map(
+                fn($field, $file) => [$field => File::fromRequest($file)]
+            ),
+            Dictionary::of($_COOKIE),
+            Dictionary::of($_ENV),
+            Dictionary::of(self::getHeaders()),
+            Dictionary::empty()
+        );
+    }
+
+    private static function getHeaders()
+    {
+        if ( ! function_exists('getallheaders')) {
+            $headers = [];
+            foreach ($_SERVER as $name => $value) {
+                if (substr($name, 0, 5) == 'HTTP_') {
+                    $headers[str_replace(
+                        ' ', '-',
+                        ucwords(strtolower(str_replace('_', ' ', substr($name, 5))))
+                    )] = $value;
+                }
+            }
+            return $headers;
+        }
+        return getallheaders();
     }
 }
