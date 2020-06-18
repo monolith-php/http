@@ -11,7 +11,7 @@ class FileSpec extends ObjectBehavior
         'error' => 0,
         'size' => 52,
     ];
-    
+
     private $erroredFileArray = [
         'name' => 'original-file-name.txt',
         'type' => 'text/plain',
@@ -19,11 +19,19 @@ class FileSpec extends ObjectBehavior
         'error' => 2,
         'size' => 52,
     ];
+    
+    private $saveFileArray = [
+        'name' => 'original-file-name.txt',
+        'type' => 'text/plain',
+        'tmp_name' => 'tmp/source.txt',
+        'error' => 0,
+        'size' => 52,
+    ];
 
     function it_parses_requests()
     {
         $this->beConstructedThrough('fromRequest', [$this->fileArray]);
-        
+
         $this->phpFileArray()->shouldBe($this->fileArray);
         $this->name()->shouldBe('original-file-name.txt');
         $this->mimeType()->shouldBe('text/plain');
@@ -31,10 +39,11 @@ class FileSpec extends ObjectBehavior
         $this->error()->shouldBe(null);
         $this->size()->bytes()->shouldBe(52);
     }
-    
-    function it_parses_errors() {
+
+    function it_parses_errors()
+    {
         $this->beConstructedThrough('fromRequest', [$this->erroredFileArray]);
-        
+
         $this->phpFileArray()->shouldBe($this->erroredFileArray);
         $this->name()->shouldBe('original-file-name.txt');
         $this->mimeType()->shouldBe('text/plain');

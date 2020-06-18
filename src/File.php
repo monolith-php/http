@@ -20,7 +20,7 @@ final class File
         $this->size = ByteSize::fromBytes($phpFileArray['size']);
     }
 
-    public function phpFileArray(): array 
+    public function phpFileArray(): array
     {
         return $this->phpFileArray;
     }
@@ -34,7 +34,7 @@ final class File
     {
         return $this->mimeType;
     }
-    
+
     public function serverTempName(): string
     {
         return $this->serverTempName;
@@ -49,7 +49,30 @@ final class File
     {
         return $this->size;
     }
-    
+
+    /**
+     * Leave the filename null to use the original file name
+     */
+    public function save(string $directory, ?string $filename = null)
+    {
+        if (
+            ! realpath($directory) ||
+            ! is_dir($directory)
+        ) {
+            throw new CanNotSaveFileToInvalidDestination($directory);
+        }
+
+        $destination = $filename
+            ? $directory . "/{$filename}"
+            : $directory . "/{$this->name}";
+
+        $couldBeMoved = move_uploaded_file($this->serverTempName, $destination);
+        
+        if (false === $couldBeMoved) {
+            throw new CanNotMoveUploadedFile("{$this->serverTempName} must have been a valid uploaded file.");
+        }
+    }
+
     public static function fromRequest(array $request)
     {
         return new static($request);
