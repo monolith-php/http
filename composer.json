@@ -12,12 +12,12 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.4",
     "monolith/collections": "^6",
     "monolith/component-bootstrapping": "^6"
   },
   "require-dev": {
-    "phpspec/phpspec": "^4.0"
+    "phpspec/phpspec": "dev-master"
   },
   "autoload": {
     "psr-4": {
@@ -29,7 +29,8 @@
       "spec\\Monolith\\Http\\": "spec/"
     },
     "files": [
-      "spec/functions.php"
+      "src/functions.php",
+      "spec/spec-functions.php"
     ]
   },
   "config": {
