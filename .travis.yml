@@ -1,8 +1,11 @@
 language: php
 
 php:
-  - 7.2
+  - 7.4
 
+git:
+  submodules: false
+  
 before_script:
   - composer self-update
   - composer install --no-interaction
