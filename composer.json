@@ -5,14 +5,8 @@
     "monolith",
     "http"
   ],
-  "authors": [
-    {
-      "name": "Shawn McCool",
-      "email": "shawn@heybigname.com"
-    }
-  ],
   "require": {
-    "php": "^7.4",
+    "php": ">=7.4",
     "monolith/collections": "^8",
     "monolith/component-bootstrapping": "^7"
   },
