@@ -6,13 +6,23 @@
     "http"
   ],
   "require": {
-    "php": ">=7.4",
-    "monolith/collections": "^8",
-    "monolith/component-bootstrapping": "^7"
+    "php": ">=8",
+    "monolith/collections": "^9",
+    "monolith/component-bootstrapping": "^8"
   },
   "require-dev": {
-    "phpspec/phpspec": "dev-master"
+    "phpspec/phpspec": "^7"
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.humanmusic.eu",
+      "canonical": false,
+      "only": [
+        "monolith/*"
+      ]
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Monolith\\Http\\": "src/"

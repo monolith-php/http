@@ -4,3 +4,4 @@ composer.lock
 /bin
 /vendor
 /tmp
+auth.json
