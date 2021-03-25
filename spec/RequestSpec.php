@@ -94,9 +94,9 @@ class RequestSpec extends ObjectBehavior
 
         $request = $this::fromGlobals();
 
-        $request = $request->addParameters(new Dictionary(['a' => 1, 'b' => 2]));
-        $request->parameters()->get('a')->shouldBe(1);
-        $request->parameters()->get('b')->shouldBe(2);
+        $request = $request->addAppParameters(new Dictionary(['a' => 1, 'b' => 2]));
+        $request->appParameters()->get('a')->shouldBe(1);
+        $request->appParameters()->get('b')->shouldBe(2);
 
         $serialized = $request->serialize();
 
@@ -116,5 +116,22 @@ class RequestSpec extends ObjectBehavior
         $_SERVER['REQUEST_URI'] = 'hats%20again?dogs=cats';
         $request = $this::fromGlobals();
         $request->uri()->shouldBe('hats again');
+    }
+
+    function it_can_provide_query_string_parameters()
+    {
+        $_SERVER['QUERY_STRING'] = 'cat=dog';
+
+        $request = $this::fromGlobals();
+
+        $request->urlParameters()->isEmpty()->shouldBe(false);
+        $request->urlParameters()->get('cat')->shouldBe('dog');
+    }
+
+    function it_provides_an_empty_dictionary_when_theres_no_query_string_parameters()
+    {
+        $_SERVER['QUERY_STRING'] = '';
+        $request = $this::fromGlobals();
+        $request->urlParameters()->isEmpty()->shouldBe(true);
     }
 }

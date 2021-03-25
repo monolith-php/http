@@ -4,51 +4,21 @@ use Monolith\Collections\Dictionary;
 
 final class Request
 {
-    /** @var string */
-    private $body;
-    /** @var Dictionary */
-    private $get;
-    /** @var Dictionary */
-    private $post;
-    /** @var Dictionary */
-    private $server;
-    /** @var Dictionary */
-    private $files;
-    /** @var Dictionary */
-    private $cookies;
-    /** @var Dictionary */
-    private $env;
-    /** @var Dictionary */
-    private $headers;
-    /** @var Dictionary */
-    private $parameters;
-
     public function __construct(
-        string $body,
-        Dictionary $get,
-        Dictionary $post,
-        Dictionary $server,
-        Dictionary $files,
-        Dictionary $cookies,
-        Dictionary $env,
-        Dictionary $headers,
-        Dictionary $parameters = null
+        private string $body,
+        private Dictionary $get,
+        private Dictionary $post,
+        private Dictionary $server,
+        private Dictionary $files,
+        private Dictionary $cookies,
+        private Dictionary $env,
+        private Dictionary $headers,
+        private ?Dictionary $appParameters = null
     ) {
-        if ($parameters == null) {
-            $parameters = new Dictionary;
-        }
-        $this->body = $body;
-        $this->get = $get;
-        $this->post = $post;
-        $this->server = $server;
-        $this->files = $files;
-        $this->cookies = $cookies;
-        $this->env = $env;
-        $this->headers = $headers;
-        $this->parameters = $parameters;
+        $this->appParameters ??= new Dictionary;
     }
 
-    public function addParameters(Dictionary $params): Request
+    public function addAppParameters(Dictionary $newAppParameters): Request
     {
         return new static(
             $this->body,
@@ -59,13 +29,19 @@ final class Request
             $this->cookies,
             $this->env,
             $this->headers,
-            $this->parameters->merge($params)
+            $this->appParameters->merge($newAppParameters)
         );
     }
 
-    public function parameters(): Dictionary
+    public function appParameters(): Dictionary
     {
-        return $this->parameters;
+        return $this->appParameters;
+    }
+
+    public function urlParameters(): Dictionary
+    {
+        parse_str($this->server->get('QUERY_STRING'), $urlParameters);
+        return Dictionary::of($urlParameters);
     }
 
     public function body(): string
@@ -154,19 +130,19 @@ final class Request
         return ! empty($this->server->get('HTTPS'));
     }
 
-    public function scheme()
+    public function scheme(): string
     {
         return $this->isSecure() ? 'https' : 'http';
     }
 
-    public function serialize()
+    public function serialize(): array
     {
         return [
             'body' => $this->body,
             'get' => $this->get->toArray(),
             'post' => $this->post->toArray(),
             'server' => $this->server->toArray(),
-            'parameters' => $this->parameters->toArray(),
+            'parameters' => $this->appParameters->toArray(),
             'headers' => $this->headers->toArray(),
             'files' => $this->files->toArray(),
             'cookies' => $this->cookies->toArray(),
@@ -195,7 +171,7 @@ final class Request
         );
     }
 
-    private static function getHeaders()
+    private static function getHeaders(): bool|array
     {
         if ( ! function_exists('getallheaders')) {
             $headers = [];
