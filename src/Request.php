@@ -92,7 +92,7 @@ final class Request
             stristr($uri ?? '', '?') ? strstr($uri, '?', true) : $uri;
 
         return urldecode(
-            $uriWithoutQueryString
+            $uriWithoutQueryString ?? ''
         );
     }
 
