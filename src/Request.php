@@ -89,7 +89,7 @@ final class Request
         $uri = $this->server->get('REQUEST_URI');
 
         $uriWithoutQueryString =
-            stristr($uri, '?') ? strstr($uri, '?', true) : $uri;
+            stristr($uri ?? '', '?') ? strstr($uri, '?', true) : $uri;
 
         return urldecode(
             $uriWithoutQueryString
