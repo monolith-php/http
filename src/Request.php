@@ -5,22 +5,22 @@ use Monolith\Collections\Dictionary;
 final class Request
 {
     public function __construct(
-        private string $body,
-        private Dictionary $get,
-        private Dictionary $post,
-        private Dictionary $server,
-        private Dictionary $files,
-        private Dictionary $cookies,
-        private Dictionary $env,
-        private Dictionary $headers,
+        private readonly string $body,
+        private readonly Dictionary $get,
+        private readonly Dictionary $post,
+        private readonly Dictionary $server,
+        private readonly Dictionary $files,
+        private readonly Dictionary $cookies,
+        private readonly Dictionary $env,
+        private readonly Dictionary $headers,
         private ?Dictionary $appParameters = null
     ) {
-        $this->appParameters ??= new Dictionary;
+        $this->appParameters ??= Dictionary::empty();
     }
 
     public function addAppParameters(Dictionary $newAppParameters): Request
     {
-        return new static(
+        return new self(
             $this->body,
             $this->get,
             $this->post,
@@ -84,7 +84,7 @@ final class Request
         return $this->headers;
     }
 
-    public function uri()
+    public function uri(): string
     {
         $uri = $this->server->get('REQUEST_URI');
 
@@ -101,7 +101,7 @@ final class Request
         return $this->server->get('REQUEST_URI');
     }
 
-    public function method()
+    public function method(): string
     {
         if (strtolower($this->server->get('REQUEST_METHOD')) == 'head') {
             return 'get';
@@ -156,7 +156,7 @@ final class Request
 
     public static function fromGlobals(): Request
     {
-        return new static(
+        return new self(
             file_get_contents('php://input'),
             Dictionary::of($_GET),
             Dictionary::of($_POST),
@@ -176,7 +176,7 @@ final class Request
         if ( ! function_exists('getallheaders')) {
             $headers = [];
             foreach ($_SERVER as $name => $value) {
-                if (substr($name, 0, 5) == 'HTTP_') {
+                if (str_starts_with($name, 'HTTP_')) {
                     $headers[str_replace(
                         ' ', '-',
                         ucwords(strtolower(str_replace('_', ' ', substr($name, 5))))

@@ -10,13 +10,13 @@ class RequestSpec extends ObjectBehavior
     function let()
     {
         $body = 'raw body';
-        $get = new Dictionary();
-        $input = new Dictionary();
-        $server = new Dictionary();
-        $files = new Dictionary();
-        $cookies = new Dictionary();
-        $env = new Dictionary();
-        $headers = new Dictionary();
+        $get = Dictionary::empty();
+        $input = Dictionary::empty();
+        $server = Dictionary::empty();
+        $files = Dictionary::empty();
+        $cookies = Dictionary::empty();
+        $env = Dictionary::empty();
+        $headers = Dictionary::empty();
 
         $this->beConstructedWith($body, $get, $input, $server, $files, $cookies, $env, $headers);
     }
@@ -94,7 +94,7 @@ class RequestSpec extends ObjectBehavior
 
         $request = $this::fromGlobals();
 
-        $request = $request->addAppParameters(new Dictionary(['a' => 1, 'b' => 2]));
+        $request = $request->addAppParameters(Dictionary::of(['a' => 1, 'b' => 2]));
         $request->appParameters()->get('a')->shouldBe(1);
         $request->appParameters()->get('b')->shouldBe(2);
 
