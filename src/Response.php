@@ -1,5 +1,6 @@
 <?php namespace Monolith\Http;
 
+use Closure;
 use Monolith\Collections\Dictionary;
 use Monolith\Collections\Collection;
 
@@ -11,33 +12,16 @@ use Monolith\Collections\Collection;
  */
 final class Response
 {
-    /** @var string */
-    private $code;
-    /** @var string */
-    private $codeString;
-    /** @var string */
-    private $body;
-    /** @var Collection */
-    private $cookies;
-    /** @var Dictionary */
-    private $headers;
-    /** @var callable */
-    private $streamFunction;
-
-    private function __construct(
-        string $code,
-        $codeString,
-        $body = '',
-        Collection $cookies = null,
-        Dictionary $headers = null,
-        callable $streamFunction = null
+    public function __construct(
+        private readonly string $code,
+        private readonly string $codeString,
+        private readonly mixed $body = '',
+        private ?Collection $cookies = null,
+        private ?Dictionary $headers = null,
+        private readonly ?Closure $streamFunction = null
     ) {
-        $this->body = $body;
-        $this->code = $code;
-        $this->codeString = $codeString;
         $this->cookies = $cookies ?? Collection::empty();
         $this->headers = $headers ?? Dictionary::empty();
-        $this->streamFunction = $streamFunction;
     }
 
     public function body(): string
@@ -55,7 +39,7 @@ final class Response
         return $this->headers;
     }
 
-    public function withHeader($name, $value): Response
+    public function withHeader($name, $value): self
     {
         return new Response(
             $this->code,
@@ -66,7 +50,7 @@ final class Response
         );
     }
 
-    public function withCookie(Cookie $cookie): Response
+    public function withCookie(Cookie $cookie): self
     {
         return new Response(
             $this->code,
@@ -193,29 +177,29 @@ final class Response
      * @param callable $streamFunction
      * @return static
      */
-    public static function stream(callable $streamFunction)
+    public static function stream(callable $streamFunction): self
     {
-        return new static('', '', '', null, null, $streamFunction);
+        return new self('', '', '', null, null, $streamFunction);
     }
 
-    public static function ok(string $body = '')
+    public static function ok(string $body = ''): self
     {
-        return new static('200', 'OK', $body);
+        return new self('200', 'OK', $body);
     }
 
-    public static function created(string $body = '')
+    public static function created(string $body = ''): self
     {
-        return new static('201', 'Created', $body);
+        return new self('201', 'Created', $body);
     }
 
-    public static function noContent(string $body = '')
+    public static function noContent(string $body = ''): self
     {
-        return new static('204', 'No Content', $body);
+        return new self('204', 'No Content', $body);
     }
 
-    public static function redirect($url)
+    public static function redirect($url): self
     {
-        return new static(
+        return new self(
             '302', 'Found', '', Collection::empty(), Dictionary::of(
             [
                 'Location' => $url,
@@ -223,28 +207,28 @@ final class Response
         );
     }
 
-    public static function badRequest(string $body = '')
+    public static function badRequest(string $body = ''): self
     {
-        return new static('400', 'Bad Request', $body);
+        return new self('400', 'Bad Request', $body);
     }
 
-    public static function unauthorized(string $body = '')
+    public static function unauthorized(string $body = ''): self
     {
-        return new static('401', 'Unauthorized', $body);
+        return new self('401', 'Unauthorized', $body);
     }
 
-    public static function notFound(string $body = '')
+    public static function notFound(string $body = ''): self
     {
-        return new static('404', 'Not Found', $body);
+        return new self('404', 'Not Found', $body);
     }
 
-    public static function unprocessable(string $body = '')
+    public static function unprocessable(string $body = ''): self
     {
-        return new static('422', 'Unprocessable Entity', $body);
+        return new self('422', 'Unprocessable Entity', $body);
     }
 
-    public static function tooManyRequests(string $body = '')
+    public static function tooManyRequests(string $body = ''): self
     {
-        return new static('429', 'Too Many Requests', $body);
+        return new self('429', 'Too Many Requests', $body);
     }
 }
